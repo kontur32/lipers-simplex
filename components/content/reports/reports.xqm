@@ -65,6 +65,10 @@ declare function reports:main( $params ){
        return
          $params?_tpl( 'content/reports/vedomost.dynamics', map{} )
     
+    case "uchenik.vozrast"
+       return
+         $params?_tpl( 'content/reports/uchenik.vozrast', map{} )
+    
     default
       return
         $params?_tpl( 'content/reports/vedomost.semestr', map{} )
