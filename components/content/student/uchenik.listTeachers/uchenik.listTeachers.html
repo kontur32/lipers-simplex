@@ -1,0 +1,88 @@
+<div>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    color: blue;
+    font: auto;
+    word-wrap: break-word;text-align: center;
+}
+
+/* style button */
+
+button {
+  margin: 10px 5px;
+  padding: 18px 50px;
+  border-radius: 13px;
+  border: 1px solid;
+  font: 14px Georgia, 'Times New Roman', Times, serif;;
+  text-transform: uppercase;
+  background: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+/* btn-8 */
+.btn-8 {
+  color: #2D4EE6;
+  border-color: #ACE7EF;
+  overflow: hidden;
+  position: relative;
+}
+.btn-8:before, .btn-8:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  height: 100%;
+  width: 0;
+  top: 0;
+  background-color: #ACE7EF;
+  -webkit-transition: all 3s;
+  transition: all 3s;
+}
+.btn-8:before {
+  left: -30px;
+  -webkit-transform: skew(-45deg, 0);
+          transform: skew(-45deg, 0);
+}
+.btn-8:after {
+  right: -30px;
+  -webkit-transform: skew(-45deg, 0);
+          transform: skew(-45deg, 0);
+}
+.btn-8:hover {
+  color: #27323A;
+}
+.btn-8:hover:before, .btn-8:hover:after {
+  width: 80%;
+}
+
+/* end style button */
+
+.clear{
+	display:block;
+	width:100%;
+	height:0px;
+	clear:both;
+	overflow:hidden;
+	visibility: hidden;
+	font:400 0px/0px Arial;
+}
+
+#wrapper {
+    margin: 0 auto;
+	width: 1000px;
+}
+</style>
+<div><center>
+
+{{список}}
+</center>
+</div>
+</div>
