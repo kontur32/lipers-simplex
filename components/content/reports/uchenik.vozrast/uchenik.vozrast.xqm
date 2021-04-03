@@ -4,6 +4,11 @@ import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateT
 
 declare function uchenik.vozrast:main( $params ){
   
+  let $дата :=
+    if( request:parameter( 'дата' ) )
+    then( request:parameter( 'дата' ) )
+    else( substring-before( xs:string( current-date() ), '+' ) ) 
+  
   let $data :=
     $params?_getFile(
        'Kids/kids-site-lipers.xlsx',
@@ -12,14 +17,30 @@ declare function uchenik.vozrast:main( $params ){
 
   return
     map{
-      'таблица' : uchenik.vozrast:строкиТаблицы( $data/table )
+      'дата' : $дата,
+      'таблица' : uchenik.vozrast:строкиТаблицы( $data/table, $дата )
     }
 };
 
-declare function uchenik.vozrast:строкиТаблицы( $data ){
-  let $детиВсего := $data/row[ not( normalize-space( cell[ @label = 'дата выбытия из ОО' ]/text() ) ) ][ cell[ @label = 'Класс' ]/text() ]
-  let $возраст := ( 6 to 18 )
+declare function uchenik.vozrast:строкиТаблицы( $data, $дата ){
+  let $детиВсего :=
+    $data/row
+    [   
+        (
+          not( normalize-space( cell[ @label = 'дата выбытия из ОО' ]/text() ) ) and
+          dateTime:dateParse( cell[ @label = 'дата поступления в ОО' ]/text() ) <=
+          xs:date( $дата )
+        
+        )
+        or
+        dateTime:dateParse( cell[ @label = 'дата выбытия из ОО' ]/text() ) >=
+        xs:date( $дата ) 
+    ]
+    
+    [ cell[ @label = 'Класс' ]/text() ]
   
+  
+  let $возраст := ( 6 to 18 )
   let $детиПоКлассам := 
     for $класс in ( 1 to 11 )
     let $детейВКлассе := 
@@ -37,11 +58,14 @@ declare function uchenik.vozrast:строкиТаблицы( $data ){
               text()
             ) )
             ) = $j ]
+          let $детейВсегоПоВозрасту := count( $детиВозраста )
+          let $шрифт := 
+            $детейВсегоПоВозрасту ?? 'font-weight-bold' !! ''
           return
             (
-                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м'] ) }</td>,
-                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж'] ) }</td>,
-                <td class = "text-center">{ count( $детиВозраста ) }</td>
+                <td class = '{ $шрифт }'>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м'] ) }</td>,
+                <td class = '{ $шрифт }'>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж'] ) }</td>,
+                <td class = "text-center { $шрифт }">{ $детейВсегоПоВозрасту }</td>
               )
         }
       </tr>
