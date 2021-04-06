@@ -4,10 +4,10 @@ import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateT
 
 declare function uchenik.vozrast:main( $params ){
   
-  let $дата :=
+  let $текущаяДата :=
     if( request:parameter( 'дата' ) )
-    then( request:parameter( 'дата' ) )
-    else( substring-before( xs:string( current-date() ), '+' ) ) 
+    then( xs:date( request:parameter( 'дата' ) ) )
+    else( xs:date( '2021-04-06' ) ) 
   
   let $data :=
     $params?_getFile(
@@ -17,24 +17,24 @@ declare function uchenik.vozrast:main( $params ){
 
   return
     map{
-      'дата' : $дата,
-      'таблица' : uchenik.vozrast:строкиТаблицы( $data/table, $дата )
+      'дата' : $текущаяДата,
+      'таблица' : uchenik.vozrast:строкиТаблицы( $data/table, $текущаяДата )
     }
 };
 
-declare function uchenik.vozrast:строкиТаблицы( $data, $дата ){
+declare function uchenik.vozrast:строкиТаблицы( $data, $текущаяДата as xs:date ){
   let $детиВсего :=
     $data/row
     [   
         (
           not( normalize-space( cell[ @label = 'дата выбытия из ОО' ]/text() ) ) and
           dateTime:dateParse( cell[ @label = 'дата поступления в ОО' ]/text() ) <=
-          xs:date( $дата )
+          $текущаяДата
         
         )
         or
         dateTime:dateParse( cell[ @label = 'дата выбытия из ОО' ]/text() ) >=
-        xs:date( $дата ) 
+        $текущаяДата
     ]
     [ cell[ @label = 'Класс' ]/text() ]
   
@@ -47,17 +47,17 @@ let $детиПоКлассам :=
   where not( $i/cell[ @label = "дата выбытия из ОО"]/text() )
   where normalize-space( $i/cell[ @label = "Класс"]/text() )
   count $c
-  let $датаРождения := $i/cell[ @label = "дата рождения"]/text()
+  let $датаРождения := dateTime:dateParse( $i/cell[ @label = "дата рождения"]/text() )
   return
     <tr>
       <td>{ $c }</td>
       <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
-      <td class = "text-center">{ dateTime:dateParse( $датаРождения ) }</td>
-      <td class = "text-center">{ uchenik.vozrast:возраст( $датаРождения ) }</td>
+      <td class = "text-center">{  $датаРождения }</td>
+      <td class = "text-center">{ uchenik.vozrast:возраст( $текущаяДата,  $датаРождения ) }</td>
       <td class = "text-center">{ $датаЗачисления }</td>
       <td class = "text-center">{ $классВКоторыйПоступил }</td>
       <td class = "text-center">{ $i/cell[ @label = "Класс"]/text()}</td>
-      <td class = "text-center">{ uchenik.vozrast:текущийКласс( $дата, $датаЗачисления, $классВКоторыйПоступил ) }</td>
+      <td class = "text-center">{ uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил ) }</td>
     </tr>
   
   return
@@ -80,8 +80,8 @@ declare
   %private
 function
   uchenik.vozrast:текущийКласс(
-    $текущаяДата,
-    $датаЗачисления,
+    $текущаяДата as xs:date,
+    $датаЗачисления as xs:date,
     $классЗачисления
 ){
   let $началоГода :=
@@ -92,18 +92,18 @@ function
     }
   return
     xs:integer( $классЗачисления ) + 
-    $началоГода( $текущаяДата ) - 
-    $началоГода( $датаЗачисления )
+    $началоГода(  $текущаяДата  ) - 
+    $началоГода( $датаЗачисления  )
 };
 
 declare
   %private
 function
-  uchenik.vozrast:возраст( $дата ){
+  uchenik.vozrast:возраст( $текущаяДата as xs:date, $датаРождения as xs:date ){
     years-from-duration(
       dateTime:yearsMonthsDaysCount(
-        current-date(),
-        dateTime:dateParse( $дата )
+        $текущаяДата,
+        $датаРождения 
       )
     )
   };
