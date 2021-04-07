@@ -22,8 +22,8 @@ declare function uchenik.vozrast:main( $params ){
         <=
         $текущаяДата
         and
-        dateTime:dateParse( cell[ @label = 'дата выбытия из ОО' ]/text() ) >=
-        $текущаяДата
+        (dateTime:dateParse( cell[ @label = 'дата выбытия из ОО' ]/text() ) >=
+        $текущаяДата or not(  cell[ @label = 'дата выбытия из ОО' ]/text() ) )
     ]
 
   return
