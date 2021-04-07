@@ -7,7 +7,7 @@ declare function uchenik.vozrast:main( $params ){
   let $текущаяДата :=
     if( request:parameter( 'дата' ) )
     then( xs:date( request:parameter( 'дата' ) ) )
-    else( current-date() ) 
+    else( xs:date( '2021-04-06' )  ) 
   
   let $data :=
     $params?_getFile(
@@ -28,7 +28,7 @@ declare function uchenik.vozrast:main( $params ){
 
   return
     map{
-      'дата' : substring-before( xs:string( $текущаяДата ), '+' ),
+      'дата' : xs:string( $текущаяДата ),
       'детиПоКлассам' : uchenik.vozrast:детиПоКлассам( $детиВсего, $текущаяДата ),
       'детиПоВозрасту' : uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата )
     }
