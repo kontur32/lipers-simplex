@@ -18,12 +18,10 @@ declare function uchenik.vozrast:main( $params ){
   let $детиВсего :=
     $data/table/row
     [   
-        (
-          not( normalize-space( cell[ @label = 'дата выбытия из ОО' ]/text() ) ) and
-          dateTime:dateParse( cell[ @label = 'дата поступления в ОО' ]/text() ) <=
-          $текущаяДата
-        )
-        or
+        dateTime:dateParse( cell[ @label = 'дата поступления в ОО' ]/text() )
+        <=
+        $текущаяДата
+        and
         dateTime:dateParse( cell[ @label = 'дата выбытия из ОО' ]/text() ) >=
         $текущаяДата
     ]
@@ -37,11 +35,7 @@ declare function uchenik.vozrast:main( $params ){
 };
 
 declare function uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата ){  
-  let $возраст := ( 6 to 18 )
-  
-  let $детиПоКлассам := 
-    for $класс in ( 1 to 11 )
-    let $текущийКласс :=
+  let $текущийКласс :=
       function( $ученик as element( row ), $текущаяДата as xs:date ){
          let $датаЗачисления :=
             dateTime:dateParse( $ученик/cell[ @label = "дата поступления в ОО" ]/text() )
@@ -54,7 +48,11 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
              $классВКоторыйПоступил
            )
       }
-    
+  
+  let $возраст := ( 6 to 18 )
+  
+  let $детиПоКлассам := 
+    for $класс in ( 1 to 11 )    
     let $детейВКлассе := 
             $детиВсего[ $текущийКласс( ., $текущаяДата ) = $класс ]
     
@@ -142,7 +140,6 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
     let $классВКоторыйПоступил := 
       $i/cell[ @label = "Класс, в который поступил ребенок"]/text()
 
-   
     let $классИзБазы := $i/cell[ @label = "Класс" ]/text()
     let $классРассчетный := 
        uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил )
