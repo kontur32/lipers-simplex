@@ -63,11 +63,12 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
         {
           for $j in $возраст
           let $детиВозраста :=
-           $детейВКлассе[ cell[ @label = 'дата рождения' ]/years-from-duration(
-              dateTime:yearsMonthsDaysCount( current-date(), dateTime:dateParse(
-              text()
-            ) )
-            ) = $j ]
+           $детейВКлассе[
+               uchenik.vozrast:возраст( 
+               $текущаяДата,
+               dateTime:dateParse( cell[ @label = 'дата рождения' ]/text() )
+             ) = $j
+              ]
           let $детейВсегоПоВозрасту := count( $детиВозраста )
           let $шрифт := 
             $детейВсегоПоВозрасту ?? 'font-weight-bold' !! ''
@@ -88,13 +89,11 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
             for $j in $возраст
             let $детиВозраста :=
              $детиВсего[
-               cell[ @label = 'дата рождения' ]
-               /years-from-duration(
-                  dateTime:yearsMonthsDaysCount(
-                    current-date(),
-                    dateTime:dateParse( text() )
-                  )
-                ) = $j ]
+               uchenik.vozrast:возраст( 
+               $текущаяДата,
+               dateTime:dateParse( cell[ @label = 'дата рождения' ]/text() )
+             ) = $j
+              ]
             return
               (
                 <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м' ] ) }</td>,
@@ -144,7 +143,8 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
     let $классРассчетный := 
        uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил )
     let $датаРождения := dateTime:dateParse( $i/cell[ @label = "дата рождения"]/text() )
-    
+    let $возрастУченика := uchenik.vozrast:возраст( $текущаяДата,  $датаРождения )
+    order by $возрастУченика
     order by $классРассчетный
     count $c
     return
@@ -153,7 +153,7 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
         <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
         <td class = "text-center">{  $датаРождения }</td>
         <td class = "text-center">
-          { uchenik.vozrast:возраст( $текущаяДата,  $датаРождения ) }
+          { $возрастУченика }
         </td>
         <td class = "text-center">{ $датаЗачисления }</td>
         <td class = "text-center">{ $классВКоторыйПоступил }</td>
