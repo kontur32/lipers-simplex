@@ -46,18 +46,26 @@ let $детиПоКлассам :=
     $i/cell[ @label = "Класс, в который поступил ребенок"]/text()
   where not( $i/cell[ @label = "дата выбытия из ОО"]/text() )
   where normalize-space( $i/cell[ @label = "Класс"]/text() )
-  count $c
+ 
+  let $классИзБазы := $i/cell[ @label = "Класс" ]/text()
+  let $классРассчетный := 
+     uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил )
   let $датаРождения := dateTime:dateParse( $i/cell[ @label = "дата рождения"]/text() )
+  
+  order by $классИзБазы - $классРассчетный
+  count $c
   return
     <tr>
       <td>{ $c }</td>
       <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
       <td class = "text-center">{  $датаРождения }</td>
-      <td class = "text-center">{ uchenik.vozrast:возраст( $текущаяДата,  $датаРождения ) }</td>
+      <td class = "text-center">
+        { uchenik.vozrast:возраст( $текущаяДата,  $датаРождения ) }
+      </td>
       <td class = "text-center">{ $датаЗачисления }</td>
       <td class = "text-center">{ $классВКоторыйПоступил }</td>
-      <td class = "text-center">{ $i/cell[ @label = "Класс"]/text()}</td>
-      <td class = "text-center">{ uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил ) }</td>
+      <td class = "text-center">{ $классИзБазы }</td>
+      <td class = "text-center">{ $классРассчетный }</td>
     </tr>
   
   return
