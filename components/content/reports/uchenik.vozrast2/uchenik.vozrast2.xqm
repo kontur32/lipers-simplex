@@ -14,74 +14,170 @@ declare function uchenik.vozrast:main( $params ){
        'Kids/kids-site-lipers.xlsx',
        './file/table[ @label = "ППС" ]'
      )
-
-  return
-    map{
-      'дата' : $текущаяДата,
-      'таблица' : uchenik.vozrast:строкиТаблицы( $data/table, $текущаяДата )
-    }
-};
-
-declare function uchenik.vozrast:строкиТаблицы( $data, $текущаяДата as xs:date ){
+  
   let $детиВсего :=
-    $data/row
+    $data/table/row
     [   
         (
           not( normalize-space( cell[ @label = 'дата выбытия из ОО' ]/text() ) ) and
           dateTime:dateParse( cell[ @label = 'дата поступления в ОО' ]/text() ) <=
           $текущаяДата
-        
         )
         or
         dateTime:dateParse( cell[ @label = 'дата выбытия из ОО' ]/text() ) >=
         $текущаяДата
     ]
-    [ cell[ @label = 'Класс' ]/text() ]
-  
-let $детиПоКлассам :=   
-  for $i in $детиВсего
-  let $датаЗачисления :=
-    dateTime:dateParse( $i/cell[ @label = "дата поступления в ОО"]/text() )
-  let $классВКоторыйПоступил := 
-    $i/cell[ @label = "Класс, в который поступил ребенок"]/text()
-  where not( $i/cell[ @label = "дата выбытия из ОО"]/text() )
-  where normalize-space( $i/cell[ @label = "Класс"]/text() )
- 
-  let $классИзБазы := $i/cell[ @label = "Класс" ]/text()
-  let $классРассчетный := 
-     uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил )
-  let $датаРождения := dateTime:dateParse( $i/cell[ @label = "дата рождения"]/text() )
-  
-  order by $классИзБазы - $классРассчетный
-  count $c
+
   return
-    <tr>
-      <td>{ $c }</td>
-      <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
-      <td class = "text-center">{  $датаРождения }</td>
-      <td class = "text-center">
-        { uchenik.vozrast:возраст( $текущаяДата,  $датаРождения ) }
-      </td>
-      <td class = "text-center">{ $датаЗачисления }</td>
-      <td class = "text-center">{ $классВКоторыйПоступил }</td>
-      <td class = "text-center">{ $классИзБазы }</td>
-      <td class = "text-center">{ $классРассчетный }</td>
-    </tr>
+    map{
+      'дата' : $текущаяДата,
+      'детиПоКлассам' : uchenik.vozrast:детиПоКлассам( $детиВсего, $текущаяДата ),
+      'детиПоВозрасту' : uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата )
+    }
+};
+
+declare function uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата ){  
+  let $возраст := ( 6 to 18 )
   
+  let $детиПоКлассам := 
+    for $класс in ( 1 to 11 )
+    let $текущийКласс :=
+      function( $ученик as element( row ), $текущаяДата as xs:date ){
+         let $датаЗачисления :=
+            dateTime:dateParse( $ученик/cell[ @label = "дата поступления в ОО" ]/text() )
+         let $классВКоторыйПоступил := 
+            $ученик/cell[ @label = "Класс, в который поступил ребенок" ]/text()
+         return
+           uchenik.vozrast:текущийКласс(
+             $текущаяДата,
+             $датаЗачисления,
+             $классВКоторыйПоступил
+           )
+      }
+    
+    let $детейВКлассе := 
+            $детиВсего[ $текущийКласс( ., $текущаяДата ) = $класс ]
+    
+    return
+      <tr>
+        <td>{ $класс }</td>
+        <td class = "text-center">{ count( $детейВКлассе ) }</td>
+        {
+          for $j in $возраст
+          let $детиВозраста :=
+           $детейВКлассе[ cell[ @label = 'дата рождения' ]/years-from-duration(
+              dateTime:yearsMonthsDaysCount( current-date(), dateTime:dateParse(
+              text()
+            ) )
+            ) = $j ]
+          let $детейВсегоПоВозрасту := count( $детиВозраста )
+          let $шрифт := 
+            $детейВсегоПоВозрасту ?? 'font-weight-bold' !! ''
+          return
+            (
+                <td class = '{ $шрифт }'>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м'] ) }</td>,
+                <td class = '{ $шрифт }'>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж'] ) }</td>,
+                <td class = "text-center { $шрифт }">{ $детейВсегоПоВозрасту }</td>
+              )
+        }
+      </tr>
+  
+  let $детиВсего :=
+        <tr>
+          <td>Всего </td>
+          <td class = "text-center">{ count( $детиВсего ) }</td>
+          {
+            for $j in $возраст
+            let $детиВозраста :=
+             $детиВсего[
+               cell[ @label = 'дата рождения' ]
+               /years-from-duration(
+                  dateTime:yearsMonthsDaysCount(
+                    current-date(),
+                    dateTime:dateParse( text() )
+                  )
+                ) = $j ]
+            return
+              (
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м' ] ) }</td>,
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж' ] ) }</td>,
+                <td class = "text-center">{ count( $детиВозраста ) }</td>
+              )
+          }
+        </tr>
   return
      <table class = 'table-striped'>
        <tr class = "text-center">
-          <th>№ пп</th>
-          <th>Фамилия</th>
-          <th>Дата рождения</th>
-          <th>Возраст</th>
-          <th>Дата зачисления</th>
-          <th>Класс поступления</th>
-          <th>Класс в базе</th>
-          <th>Класс расчетный</th>
+          <th rowspan = "3">Класс</th>
+          <th rowspan = "3">В классе</th>
+          <th colspan = "39">Возраст</th>
         </tr>
+        <tr>
+          {
+            for $j in $возраст
+            return
+              <th colspan = "3" class = "text-center">{ $j }</th>
+          }
+        </tr>
+        <tr>{
+          for $j in $возраст
+            return
+              (
+                <th>м</th>,
+                <th>д</th>,
+                <th>всего</th>
+              )
+              
+        }</tr>
         { $детиПоКлассам }
+        { $детиВсего }
      </table>
+};
+
+declare function uchenik.vozrast:детиПоКлассам( $детиВсего, $текущаяДата as xs:date ){
+  let $детиПоКлассам :=   
+    for $i in $детиВсего
+    let $датаЗачисления :=
+      dateTime:dateParse( $i/cell[ @label = "дата поступления в ОО"]/text() )
+    let $классВКоторыйПоступил := 
+      $i/cell[ @label = "Класс, в который поступил ребенок"]/text()
+
+   
+    let $классИзБазы := $i/cell[ @label = "Класс" ]/text()
+    let $классРассчетный := 
+       uchenik.vozrast:текущийКласс( $текущаяДата , $датаЗачисления, $классВКоторыйПоступил )
+    let $датаРождения := dateTime:dateParse( $i/cell[ @label = "дата рождения"]/text() )
+    
+    order by $классРассчетный
+    count $c
+    return
+      <tr>
+        <td>{ $c }</td>
+        <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
+        <td class = "text-center">{  $датаРождения }</td>
+        <td class = "text-center">
+          { uchenik.vozrast:возраст( $текущаяДата,  $датаРождения ) }
+        </td>
+        <td class = "text-center">{ $датаЗачисления }</td>
+        <td class = "text-center">{ $классВКоторыйПоступил }</td>
+        <td class = "text-center">{ $классИзБазы }</td>
+        <td class = "text-center">{ $классРассчетный }</td>
+      </tr>
+    
+    return
+       <table class = 'table-striped'>
+         <tr class = "text-center">
+            <th>№ пп</th>
+            <th>Фамилия</th>
+            <th>Дата рождения</th>
+            <th>Возраст</th>
+            <th>Дата зачисления</th>
+            <th>Класс поступления</th>
+            <th>Класс в базе</th>
+            <th>Класс расчетный</th>
+          </tr>
+          { $детиПоКлассам }
+       </table>
 };
 
 declare
