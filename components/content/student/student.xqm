@@ -2,13 +2,13 @@ module namespace content = 'content/student';
 
 declare function content:main( $params ){
   
-  let $личнаяКарточка := 
-    $params?_tpl( 'content/student/uchenik.profil', map{} )
+  let $текущиеОценки := 
+    $params?_tpl( 'content/reports/uchenik.ocenki', map{} )
+  
   
   let $result := 
     <div>
-      <div class = 'h4'></div>
-      <div>Профиль ученика</div>
+      <div>{ $текущиеОценки }</div>
     </div>
   
   return
