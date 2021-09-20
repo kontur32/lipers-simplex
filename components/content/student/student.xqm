@@ -8,7 +8,7 @@ declare function content:main( $params ){
   let $result := 
     <div>
       <div class = 'h4'></div>
-      <div>{ $личнаяКарточка }</div>
+      <div>Профиль ученика</div>
     </div>
   
   return

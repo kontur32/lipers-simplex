@@ -29,7 +29,7 @@ declare function uchenik.vozrast:main( $params ){
   return
     map{
       'дата' : xs:string( $текущаяДата ),
-      'детиПоКлассам' : uchenik.vozrast:детиПоКлассам( $детиВсего, $текущаяДата ),
+      'детиПоКлассам' :  uchenik.vozrast:детиПоКлассам( $детиВсего, $текущаяДата ) ,
       'детиПоВозрасту' : uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата )
     }
 };
