@@ -11,6 +11,6 @@ declare function avatar:main( $params as map(*) ){
   return
     map{
       "userLabel" : $userLabel,
-      "userAvatarURL" : $params?_config( 'defaultAvatarURL' )
+      "userAvatarURL" : session:get( 'defaultAvatarURL' )
     }
 };
