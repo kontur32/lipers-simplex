@@ -57,7 +57,7 @@ function oauth:main( $code as xs:string, $state as xs:string ){
           session:set( "grants", 'teacher' ),
           session:set( "login", $userEmail ),
           session:set( "роль", $displayName ),
-          session:set( 'userAvatarURL', lower-case( string( xs:hexBinary( hash:md5( lower-case( $userEmail ) ) ) ) ) ),
+          session:set( 'userAvatarURL', 'https://www.gravatar.com/avatar/' || lower-case( string( xs:hexBinary( hash:md5( lower-case( $userEmail ) ) ) ) ) ),
           web:redirect( config:param( 'host' ) || config:param( 'rootPath' ) || '/t'  )
         )
     )
