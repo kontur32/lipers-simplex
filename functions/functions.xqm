@@ -91,27 +91,36 @@ declare function funct:tpl( $app, $params ){
           $query, 
           map{ 'params':
             map:merge( 
-              ( $params, map{ '_tpl' : $tpl, '_data' : $getData:funct, '_config' : $config:param, '_getFile' : $getFile } )
+              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile } )
             )
           }
         ),
       map { 'time': true() }
       )
-  (:
-    let $log :=
-    funct:log(
-      'profiling.log',
-      $app || '--' || $result?time,
-      map{ 'mode' : 'add
-      ' }
-    )
-  
-  :)
-  
+
   return
      funct:xhtml( $app, $result?value, $componentPath )
 };
 
+
+declare
+  %public
+function funct:getFileRaw(  $fileName, $storeID, $access_token ){
+ let $href := 
+   web:create-url(
+     $config:param( "api.method.getData" ) || 'stores/' ||  $storeID || '/file',
+     map{
+       'access_token' : $access_token,
+       'path' : $fileName
+     }
+   )
+ return
+   try{
+     fetch:binary( $href )
+   }catch*{
+     try{ fetch:text( $href ) }catch*{}
+   }
+};
 
 declare
   %public

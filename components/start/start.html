@@ -92,8 +92,6 @@
 														</span>
 Календарный план-график</a>
 												 </li>
-                         
-                         
                          </ul>
 										</div>
 									</div>
@@ -108,9 +106,7 @@
 							<figure class="image">
                 <center>
                 <img src="http://iro37.ru/res/trac-src/xqueries/lipers/images/image_part_002.jpg" style="height: 292.5px;"/>
-              
                 <span class="imgname3 post4 transition-width" style="font-family: 'Open Sans Condensed', sans-serif;">ДОМАШНЕЕ ЗАДАНИЕ</span>
-                
                 </center>
 								<figcaption style="height: 292.5px;">
 									<div class="row">
@@ -124,9 +120,6 @@
 														</span>
 Домашние задания</a>
 												 </li>
-                         
-                         
-                         
                          </ul>
 										</div>
 									</div>
@@ -239,15 +232,15 @@
 								<span class="imgname2 post4 transition-width" style="font-family: 'Open Sans Condensed', sans-serif;">АВТОРИЗАЦИЯ</span>
 								<figcaption style="height: 292.5px;">
 									<div class="row">
-										<div class="col-md-12" style="text-transform: uppercase;">
-
-                    <div class="row">
+<div class="col-md-12" style="text-transform: uppercase;">
+  <div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-10">
-        <form class="card shadow rounded p-4 m-10" id="login">
-            <div class="form-group">
-                <h6>Для входа в систему введите:</h6>
-				<label for="">Логин</label>
+        <form class="card shadow rounded p-3 m-1" id="login">
+            <div class="form-group mb-0">
+                <a class="btn btn-info" href = "{{OAuthLoginURL}}">Войти через titul24</a>
+                <h6 class = "m-2">Для входа введите:</h6>
+                <label for="">Логин</label>
                 <input type="text" name="login" id="" class="form-control" placeholder="user" aria-describedby="helpId"/>
                 <small id="helpId" class="text-muted">Введите логин</small>
             </div>
@@ -256,8 +249,9 @@
                 <input type="password" name="password" id="" class="form-control" placeholder="password" aria-describedby="helpId"/>
                 <small id="helpId" class="text-muted">Введите пароль</small>
             </div>
-            <button class="btn btn-info" form="login" type="submit" formmethod="GET" formaction="/lipers-simplex/api/v01/login">Войти</button>
+            <button class="btn btn-info m-0" form="login" type="submit" formmethod="GET" formaction="/lipers-simplex/api/v01/login">Войти</button>
         </form>
+
     </div>
     <div class="col-sm-10"></div>
 </div>

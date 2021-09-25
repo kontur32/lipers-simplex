@@ -1,22 +1,17 @@
 module namespace start = "start";
 
 declare function start:main( $params as map(*) ){
-  let $p := 
-    if( $params?area != "")
-    then(
-       map{
-          'логотип' : <div></div>,
-          'mainMenu' : $params?_tpl( 'header/mainMenu', $params  ),
-          'avatar' : $params?_tpl( 'header/avatar', map{} )
-        } 
+  let $OAuthLoginURL :=
+    web:create-url(
+      $params?_config( 'authHost' ) || '/oauth/authorize',
+      map{
+        'client_id' : $params?_config( 'OAuthClienID' ),
+        'response_type' : 'code',
+        'state' : 'state'
+      }
     )
-    else(
-       map{
-          'логотип' : $params?_tpl( 'header/logo', map{} ),
-          'mainMenu' : '',
-          'avatar' : ''
-        }
-    )
-  return
-    $p
+  return  
+    map{
+      'OAuthLoginURL' : $OAuthLoginURL
+    }
 };

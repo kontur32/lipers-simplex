@@ -2,10 +2,10 @@ module namespace check = "check";
 
 
 declare 
-  %perm:check( "/saivpds/s" )
+  %perm:check( "/lipers-simplex/s" )
 function check:userArea(){
  let $grants := session:get( "grants" )
   where  not( $grants = 'student' )
   return
-    web:redirect("/saivpds")
+    web:redirect("/lipers-simplex")
 };
