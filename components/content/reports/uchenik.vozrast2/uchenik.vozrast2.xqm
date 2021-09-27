@@ -2,6 +2,8 @@ module namespace uchenik.vozrast = 'content/reports/uchenik.vozrast2';
 
 import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
 
+declare variable $uchenik.vozrast:месяцДеньПеревода := '06-01';
+
 declare function uchenik.vozrast:main( $params ){
   
   let $текущаяДата :=
@@ -187,7 +189,10 @@ function
 ){
   let $началоГода :=
     function( $дата ){
-        if( $дата < xs:date( year-from-date( $дата ) || '-09-01' ) )
+        if( 
+          $дата < 
+          xs:date( year-from-date( $дата ) || '-' || $uchenik.vozrast:месяцДеньПеревода )
+        )
         then( year-from-date( $дата ) - 1 )
         else( year-from-date( $дата ) )
     }
