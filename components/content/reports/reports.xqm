@@ -77,6 +77,9 @@ declare function reports:main( $params ){
        return
          $params?_tpl( 'content/reports/uchenik.ocenki', map{} )
     
+    case "uchenik.quality"
+       return
+         $params?_tpl( 'content/reports/uchenik.quality', map{} )
     default
       return
         $params?_tpl( 'content/reports/vedomost.semestr', map{} )
