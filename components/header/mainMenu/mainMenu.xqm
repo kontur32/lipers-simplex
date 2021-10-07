@@ -8,8 +8,7 @@ declare function mainMenu:main( $params as map(*) ){
         let $items := 
           (
             [ 'Журнал пропусков', 'teachers.konduit' ],
-            [ 'Возраст учащихся', 'uchenik.vozrast2' ],
-            [ 'Качество обучения', 'uchenik.quality' ]
+            [ 'Возраст учащихся', 'uchenik.vozrast2' ]
           )
         return
            [ $items, 't', 'Форма для преподавателя' ]
