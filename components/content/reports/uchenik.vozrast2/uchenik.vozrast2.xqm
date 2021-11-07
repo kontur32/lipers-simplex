@@ -153,6 +153,7 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
       <tr>
         <td>{ $c }</td>
         <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
+		<td>{ $i/cell[ @label = "имя,"]/text()}</td>
         <td class = "text-center">{  $датаРождения }</td>
         <td class = "text-center">
           { $возрастУченика }
@@ -168,6 +169,7 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
          <tr class = "text-center">
             <th>№ пп</th>
             <th>Фамилия</th>
+			<th>Имя</th>
             <th>Дата рождения</th>
             <th>Возраст</th>
             <th>Дата зачисления</th>

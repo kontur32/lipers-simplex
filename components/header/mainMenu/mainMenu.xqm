@@ -11,7 +11,7 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Возраст учащихся', 'uchenik.vozrast2' ]
           )
         return
-           [ $items, 't', 'Форма для преподавателя' ]
+           [ $items, 't', 'Контингент' ]
     case 'student'
       return
         let $items := 
@@ -19,16 +19,32 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Оценки', 'uchenik.ocenki' ]
           )
         return
-          [ $items, 's', 'Форма для студента' ]
+          [ $items, 's', 'Форма для ученика' ]
     default
       return
         [ ( [ '', '' ] ), '', '' ]
 
+  let $пункты2 :=
+    switch ( $params?area )
+    case 'teacher'
+      return
+        let $items2 := 
+          (
+            [ 'Журнал пропусков', 'teachers.konduit' ]
+          )
+        return
+           [ $items2, 't', 'Кадры' ]
+    default
+      return
+        [ ( [ '', '' ] ), '', '' ]
+    
   let $меню :=
     map{
       'главная' : '/lipers-simplex/' || $пункты?2,
       'названиеРаздела' : $пункты?3,
-      'пункты' : mainMenu:items( $пункты?1, $пункты?2, $пункты?3 )
+	  'названиеРаздела2' : $пункты2?3,
+      'пункты' : mainMenu:items( $пункты?1, $пункты?2, $пункты?3 ),
+	  'пункты2' : mainMenu:items( $пункты2?1, $пункты2?2, $пункты2?3 )
     }
   return
      $меню
