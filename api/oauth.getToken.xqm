@@ -45,13 +45,7 @@ function oauth:main( $code as xs:string, $state as xs:string ){
           
       let $userInfo := oauth:getUserInfo( $userEmail )
       let $displayName :=
-        string-join(
-          (
-            $userInfo/Фамилия/text(),
-            $userInfo/Имя/text(),
-            $userInfo/Отчество/text()
-          ), ' '
-        )
+        /cell[ @label = 'Фамилия Имя Отчество']/text()
       return
         (
           session:set( "grants", 'teacher' ),
@@ -66,6 +60,22 @@ function oauth:main( $code as xs:string, $state as xs:string ){
     )
 };
 
+
+declare function oauth:getUserInfo1( $userEmail ){
+  let $data :=
+    funct:getFileRaw(
+      'авторизация/lipersTeachers.xlsx',
+      'f6104dd1-b88b-4104-9528-b8a7d473b251',
+      session:get( 'access_token')
+    )
+
+let $user:=
+  $data//table/row
+  [ cell[ @label = 'Электронная почта'] = $userEmail ]
+  
+return
+  $user
+};
 
 declare function oauth:getUserInfo( $userEmail ){
   let $data :=
