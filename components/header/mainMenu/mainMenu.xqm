@@ -8,13 +8,7 @@ declare function mainMenu:main( $params as map(*) ){
         let $items := 
           (
             [ 'Журнал пропусков', 'teachers.konduit' ],
-            [ 'Табель', 'teachers.tabel' ],
-            [ 'Форма 2', '#' ],
-            [ 'Успеваемость за семестр', 'vedomost.semestr' ],
-            [ 'Динамика по семестрам', 'vedomost.dynamics' ],
-            [ 'Печать дипломов', 'uchenik.list' ],
-            [ 'Ученики по возрастам', 'uchenik.vozrast' ],
-            [ 'Список по классам', 'uchenik.vozrast2' ]
+            [ 'Возраст учащихся', 'uchenik.vozrast2' ]
           )
         return
            [ $items, 't', 'Форма для преподавателя' ]
@@ -22,12 +16,7 @@ declare function mainMenu:main( $params as map(*) ){
       return
         let $items := 
           (
-            [ 'Пропущенные темы', 'uchenik.jour.ail-new' ],
-            [ 'Домашнее задание', 'journal' ],
-            [ 'Личная страница', 'uchenik.profil' ],
-            [ 'Список преподавателей', 'uchenik.listTeachers' ],
-            [ 'Список студентов', 'uchenik.list' ]
-            
+            [ 'Оценки', 'uchenik.ocenki' ]
           )
         return
           [ $items, 's', 'Форма для студента' ]
