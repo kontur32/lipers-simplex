@@ -45,7 +45,7 @@ function oauth:main( $code as xs:string, $state as xs:string ){
           
       let $userInfo := oauth:getUserInfo( $userEmail )
       let $displayName :=
-        /cell[ @label = 'Фамилия Имя Отчество']/text()
+        $userInfo/cell[ @label = 'Фамилия Имя Отчество']/text()
       return
         (
           session:set( "grants", 'teacher' ),
