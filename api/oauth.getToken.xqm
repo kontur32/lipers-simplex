@@ -37,6 +37,7 @@ function oauth:main( $code as xs:string, $state as xs:string ){
       )
     )
   let $userEmail := $userInfo//user__email/text()
+  
   return
     if( $userEmail )
     then(
@@ -60,8 +61,7 @@ function oauth:main( $code as xs:string, $state as xs:string ){
     )
 };
 
-
-declare function oauth:getUserInfo1( $userEmail ){
+declare function oauth:getUserInfo( $userEmail ){
   let $data :=
     funct:getFileRaw(
       'авторизация/lipersTeachers.xlsx',
@@ -77,7 +77,7 @@ return
   $user
 };
 
-declare function oauth:getUserInfo( $userEmail ){
+declare function oauth:getUserInfo-old( $userEmail ){
   let $data :=
     funct:getFileRaw(  'авторизация/сотрудники.csv', 'f6104dd1-b88b-4104-9528-b8a7d473b251', session:get( 'access_token') )
 
@@ -89,5 +89,5 @@ let $userList:=
   
 return
   $userList/csv/record[ e-mail/text() = $userEmail ]
-  
 };
+
