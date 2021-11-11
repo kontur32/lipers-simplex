@@ -39,22 +39,24 @@ function oauth:main( $code as xs:string, $state as xs:string ){
   let $userEmail := $userInfo//user__email/text()
   
   return
-    if( $userEmail )
+    if( $userEmail != "" )
     then(
-      let $accessToken :=
-         session:set( 'access_token', token:getAccessToken() )
-          
+      let $accessToken := session:set( 'access_token', token:getAccessToken() )
       let $userInfo := oauth:getUserInfo( $userEmail )
-      let $displayName :=
-        $userInfo/cell[ @label = 'Фамилия Имя Отчество']/text()
+      where $userInfo
+      let $displayName := $userInfo/cell[ @label = 'Фамилия Имя Отчество']/text()
       return
         (
           session:set( "grants", 'teacher' ),
           session:set( "login", $userEmail ),
           session:set( "роль", $displayName ),
-          session:set( 'userAvatarURL', 'https://www.gravatar.com/avatar/' || lower-case( string( xs:hexBinary( hash:md5( lower-case( $userEmail ) ) ) ) ) ),
+          session:set(
+            'userAvatarURL',
+            'https://www.gravatar.com/avatar/' || lower-case( string( xs:hexBinary( hash:md5( lower-case( $userEmail ) ) ) ) )
+          ),
           web:redirect( config:param( 'host' ) || config:param( 'rootPath' ) || '/t'  )
-        )
+        ),
+        web:redirect( config:param( 'host' ) || config:param( 'rootPath' ) )
     )
     else(
       <err:LOGINFAIL>ошибка авторизации</err:LOGINFAIL>
