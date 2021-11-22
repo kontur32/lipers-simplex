@@ -1,54 +1,30 @@
 module namespace uchenik.list = 'content/reports/uchenik.list';
 
-declare function uchenik.list:main( $params ){
-  
-  let $data := $params?_getFile( 'students.xlsx', '.' )
-    
-  let $строкиТаблицы :=
-    uchenik.list:строкиТаблицы( $data//table[@label = "ОЗО 2016"]/row )
-    
-  return
-    map{
-      'строкиТаблицы' : $строкиТаблицы
-    }
-};
+declare namespace sch = 'http://schema.org';
+declare namespace lip = 'http://lipers.ru/схема';
 
-declare function uchenik.list:строкиТаблицы( $data ){
-  <tbody>
-    {
-      for $i in $data
-      count $c
-      let $фамилия := $i/cell[ @label = 'Фамилия' ]/text()
-      order by $фамилия
-      let $href1 :=
-        web:create-url(
-          '/saivpds/api/v01/print.diploma.1',
-          map{
-            'id' : $i/cell[ @label = 'номер личного дела' ]/text(),
-            'group' : 'ОЗО 2016'
-          }
-        )
-      let $href2 :=
-        web:create-url(
-          '/saivpds/api/v01/print.diploma.2',
-          map{
-            'id' : $i/cell[ @label = 'номер личного дела' ]/text(),
-            'group' : 'ОЗО 2016'
-          }
-        )
+declare function uchenik.list:main( $params ){
+ 
+    let $профильУчителя := 
+      $params?_tpl( 'content/teacher/teacher.profil', map{} )
+    let $data :=
+      $params?_getFileRDF( 'tmp/kids.xlsx', '.', 'f6104dd1-b88b-4104-9528-b8a7d473b251' )
+    let $список :=
+      for $i in $data/table/row
+      let $месяц := month-from-date( xs:date( $i/sch:birthDate ) )
+      order by  $месяц
+      group by $месяц
       return
-        <tr>
-          <td class = "text-center">{ $c }.</td>
-          <td>{ $фамилия }</td>
-          <td>{
-            $i/cell[ @label = 'Имя' ]/text()
-          }</td>
-          <td>{
-            $i/cell[ @label = 'Отчество' ]/text()
-          }</td>
-          <td align='center'><a href = "{ $href1 }">лист 1</a></td>
-          <td align='center'><a href = "{ $href2 }">лист 2</a></td>
-        </tr>
-    }
-  </tbody>
+        <li>Месяц { $месяц }<ul>{
+          for $ii in $i
+          let $день := day-from-date( xs:date( $ii/sch:birthDate ) )
+          order by  $день
+          return
+            <li>{$ii/sch:birthDate} - { $ii/sch:familyName || ' ' || $ii/sch:givenName}</li>
+        }</ul></li>
+        
+    return
+      map{
+        'списокУчеников' : <div><ol>{$список}</ol></div>
+      }
 };
