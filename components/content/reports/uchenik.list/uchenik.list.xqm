@@ -11,6 +11,10 @@ declare function uchenik.list:main( $params ){
          '.', (: запрос на выборку записей :)
          $params?_config('store.yandex.personalData') (: идентификатор хранилища :)
       )
+    
+    (: чисто для любопытсва :)
+    let $href := uchenik.list:ссылкаНаИсходныеДанные( $params )
+
     let $список :=
       for $i in $data/table/row
       let $месяц := month-from-date( xs:date( $i/sch:birthDate ) )
@@ -28,6 +32,18 @@ declare function uchenik.list:main( $params ){
         
     return
       map{
-        'списокУчеников' : <div><ol>{$список}</ol></div>
+        'списокУчеников' : <div><a href = "{ $href }">исходыне данные</a><ol>{$список}</ol></div>
       }
+};
+
+declare function uchenik.list:ссылкаНаИсходныеДанные($params){
+  web:create-url(
+     $params?_config( "api.method.getData" ) || 'stores/' ||  $params?_config('store.yandex.personalData') || '/rdf',
+     map{
+       'access_token' : session:get('access_token'),
+       'path' : 'tmp/kids.xlsx',
+       'xq' : '.',
+       'schema' : 'http://81.177.136.43:9984/zapolnititul/api/v2/forms/846524b3-febe-4418-86cc-c7d2f0b7839a/fields'
+     }
+   )
 };
