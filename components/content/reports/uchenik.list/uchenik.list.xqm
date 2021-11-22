@@ -32,7 +32,7 @@ declare function uchenik.list:main( $params ){
         
     return
       map{
-        'списокУчеников' : <div><a href = "{ $href }">исходыне данные</a><ol>{$список}</ol></div>
+        'списокУчеников' : <div><a href = "{ $href }">исходные данные</a><ol>{$список}</ol></div>
       }
 };
 
