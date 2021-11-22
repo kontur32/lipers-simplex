@@ -84,6 +84,7 @@ declare function funct:tpl( $app, $params ){
   let $tpl := function( $app, $params ){ funct:tpl( $app, $params ) }
   let $config := function( $param ){ $config:param( $param ) }
   let $getFile := function( $path,$xq ){ funct:getFile( $path, $xq ) }
+  let $getFileRDF := function( $path, $xq, $storeID ){ funct:getFileRDF( $path, $xq, $storeID ) }
   
   let $result :=
     prof:track( 
@@ -91,7 +92,7 @@ declare function funct:tpl( $app, $params ){
           $query, 
           map{ 'params':
             map:merge( 
-              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile } )
+              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile, '_getFileRDF' : $getFileRDF } )
             )
           }
         ),
@@ -121,6 +122,28 @@ function funct:getFileRaw(  $fileName, $storeID, $access_token ){
      try{ fetch:text( $href ) }catch*{}
    }
 };
+
+declare
+  %public
+function funct:getFileRDF(  $path, $xq, $storeID ){
+ let $href := 
+   web:create-url(
+     $config:param( "api.method.getData" ) || 'stores/' ||  $storeID || '/rdf',
+     map{
+       'access_token' : session:get('access_token'),
+       'path' : $path,
+       'xq' : $xq,
+       'schema' : 'http://81.177.136.43:9984/zapolnititul/api/v2/forms/846524b3-febe-4418-86cc-c7d2f0b7839a/fields'
+     }
+   )
+ return
+   try{
+     fetch:xml( $href )
+   }catch*{
+     'Ошибка чтения данных'
+   }
+};
+
 
 declare
   %public
