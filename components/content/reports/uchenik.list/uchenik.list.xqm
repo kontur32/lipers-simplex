@@ -10,7 +10,7 @@ declare function uchenik.list:main( $params ){
     (: данные в формате "похожем-на-RDF" :)
     let $data :=
       $params?_getFileRDF(
-         'tmp/kids.xlsx', (: путь к файлу в нутри хранилища :)
+         'авторизация/lipersKids.xlsx', (: путь к файлу в нутри хранилища :)
          '.', (: запрос на выборку записей :)
          'http://81.177.136.43:9984/zapolnititul/api/v2/forms/846524b3-febe-4418-86cc-c7d2f0b7839a/fields' (: адрес (URL) для доступа к схеме - по этому адресу можно пройти :),
          $params?_config('store.yandex.personalData') (: идентификатор хранилища :)
