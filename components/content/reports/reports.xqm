@@ -55,13 +55,24 @@ declare function reports:main( $params ){
           )
         return
           reports:getData( $url )
-    case "uchenik.list"
+    
+	case "teachers.list"
+      return
+        $params?_tpl( 'content/reports/teachers.list', map{} )
+	
+	case "uchenik.list"
       return
         $params?_tpl( 'content/reports/uchenik.list', map{} )
-    case "vedomost.semestr"
+		
+	case "uchenik.predmet"
+      return
+        $params?_tpl( 'content/reports/uchenik.predmet', map{} )
+    
+	case "vedomost.semestr"
        return
          $params?_tpl( 'content/reports/vedomost.semestr', map{} )
-    case "vedomost.dynamics"
+    
+	case "vedomost.dynamics"
        return
          $params?_tpl( 'content/reports/vedomost.dynamics', map{} )
     

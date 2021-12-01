@@ -9,8 +9,9 @@ declare function mainMenu:main( $params as map(*) ){
           (
             [ 'Журнал пропусков', 'teachers.konduit' ],
             [ 'Возраст учащихся', 'uchenik.vozrast2' ],
-			[ 'Дни рождения лицеистов', 'uchenik.list']
-          )
+		        [ 'Дни рождения лицеистов', 'uchenik.list'],
+            [ 'Список учителей и предметов', 'uchenik.predmet']  
+        )
         return
            [ $items, 't', 'Контингент' ]
     case 'student'
@@ -31,7 +32,8 @@ declare function mainMenu:main( $params as map(*) ){
       return
         let $items2 := 
           (
-            [ 'Журнал пропусков', 'teachers.konduit' ]
+            [ 'Журнал пропусков', 'teachers.konduit' ],
+            [ 'Дни рождения сотрудников', 'teachers.list' ]
           )
         return
            [ $items2, 't', 'Кадры' ]
