@@ -49,9 +49,11 @@ declare function uchenik.predmet:main( $data, $номерЛичногоДела 
   let $оценкиПромежуточнойАттестации := 
     stud:промежуточнаяАттестацияУченика( $tables, $номерЛичногоДела )
     
+  let $class := stud:ученики ( $tables )
+    
   let $result := 
    <div>
-   <p>Список предметов и учителей ученика: { $имяУченика }</p>     
+   <p>Список предметов и учителей ученика: { $имяУченика }, {distinct-values($class?3) } класс</p>     
    <table class = "table table-striped table-bordered">
      <tr>
            <th width="20%">Предмет</th>
@@ -59,7 +61,8 @@ declare function uchenik.predmet:main( $data, $номерЛичногоДела 
       </tr>
      {
       for $p in $оценкиПромежуточнойАттестации 
- 
+      where distinct-values($p?2) 
+      order by $p?2
 
       return 
          <tr> 

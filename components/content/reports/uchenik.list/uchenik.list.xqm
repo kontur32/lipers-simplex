@@ -39,7 +39,9 @@ declare function uchenik.list:main( $params ){
           let $день := day-from-date( xs:date( $ii/sch:birthDate ) )
           order by $день
           let $id := $ii/@id/data()
+          
           where not($ii/lip:выбытиеОО/text())
+          let $name := ($ii/sch:familyName || ' ' || $ii/sch:givenName || ' ' ||$ii/lip:отчество)
           return
             <li>
             {replace($ii/sch:birthDate,'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1')} - 
@@ -51,7 +53,7 @@ declare function uchenik.list:main( $params ){
       map{
         'списокУчеников' : <div><a href = "{ $href }">исходные данные</a>
         <h5><center>Календарь дней рождений Лицеистов на {year-from-date(current-date())} год</center></h5>
-        <p>Всего в Лицее на {replace(substring-before (xs:normalizedString (current-dateTime()), 'T'),'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1')} г. обучается {count($всегоУчеников/sch:familyName)} учеников.</p>
+        <p>Всего в Лицее на {replace(substring-before (xs:normalizedString (current-dateTime()), 'T'),'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1')} г. обучается {count($всегоУчеников/sch:familyName)} человек(а).</p>
         <ol>{$список}</ol></div>
       }
 };

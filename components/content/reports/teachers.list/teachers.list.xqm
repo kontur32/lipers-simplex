@@ -45,7 +45,7 @@ declare function teachers.list:main( $params ){
           return
             <li>
             {replace($ii/sch:birthDate,'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1')} - 
-            {$ii/sch:familyName || ' ' || $ii/sch:givenName || ' ' ||$ii/lip:отчество || ' - Поступил(а): с ' || replace($ii/lip:трудоустройствоОО,'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1') || '' || ' - Исполняется в этом году: ' || years-from-duration(dateTime:yearsMonthsDaysCount( xs:date( year-from-date(current-date()) || '-12-31'), ($ii/sch:birthDate/text()) ) ) || ' лет' }
+            {$ii/sch:familyName || ' ' || $ii/sch:givenName || ' ' ||$ii/lip:отчество || ' - Работает: с ' || replace($ii/lip:трудоустройствоОО,'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1') || '' || ' - Исполняется в этом году: ' || years-from-duration(dateTime:yearsMonthsDaysCount( xs:date( year-from-date(current-date()) || '-12-31'), ($ii/sch:birthDate/text()) ) ) || ' лет' }
             </li>
         }</ul></li>
         
@@ -53,7 +53,7 @@ declare function teachers.list:main( $params ){
       map{
         'списокУчеников' : <div><a href = "{ $href }">исходные данные</a>
         <h5><center>Календарь дней рождений сотрудников Лицея на {year-from-date(current-date())} год</center></h5>
-        <p>Всего в Лицее на {replace(substring-before (xs:normalizedString (current-dateTime()), 'T'),'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1')} г. неустанно трудится {count($всегоППС/sch:familyName)} сотрудника(ов).</p>
+        <p>Всего в Лицее на {replace(substring-before (xs:normalizedString (current-dateTime()), 'T'),'(\d{4})-(\d{2})-(\d{2})','$3.$2.$1')} г. неустанно работает {count($всегоППС/sch:familyName)} человек.</p>
         <ol>{$список}</ol></div>
       }
 };
