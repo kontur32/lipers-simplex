@@ -1,5 +1,7 @@
 module namespace uchenik.predmet = 'content/reports/uchenik.predmet';
 
+import module namespace functx = "http://www.functx.com";
+
 import module namespace stud = 'lipers/modules/student' 
   at 'https://raw.githubusercontent.com/Artmotor/lipers-zt/master/modules/stud.xqm';
   
@@ -11,6 +13,7 @@ declare function uchenik.predmet:main( $params ){
     fetch:xml(
       'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
     )
+    
   return
     map{
        'оценки' : <div>{ uchenik.predmet:main( $data, session:get( '000' )) }</div>
@@ -41,6 +44,8 @@ declare function uchenik.predmet:main( $data, $номерЛичногоДела 
   for $данные2 in stud:ученики( $data//table[ row[ 1 ]/cell/text() ] )
   let $номерЛичногоДела := ($данные2?1)
   
+  let $номерЛичногоДела := ($данные2?1)
+  
   let $tables := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДела ]
 
   let $имяУченика := 
@@ -56,8 +61,9 @@ declare function uchenik.predmet:main( $data, $номерЛичногоДела 
    <p>Список предметов и учителей ученика: { $имяУченика }, {distinct-values($class?3) } класс</p>     
    <table class = "table table-striped table-bordered">
      <tr>
-           <th width="20%">Предмет</th>
-           <th width="10%">Учитель</th>
+           <th width="10%">Предмет</th>
+           <th width="20%">Учитель</th>
+           <th width="10%">Кабинет</th>
       </tr>
      {
       for $p in $оценкиПромежуточнойАттестации 
@@ -67,7 +73,8 @@ declare function uchenik.predmet:main( $data, $номерЛичногоДела 
       return 
          <tr> 
            <td> { $p?1 } </td>
-           <td> { $p?2 } </td>
+           <td> { substring-before ($p?2, ',') } </td>
+           <td> { substring-after ($p?2, ',') } </td>
          </tr>
       }
     </table>

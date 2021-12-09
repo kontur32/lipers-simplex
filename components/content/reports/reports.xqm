@@ -92,12 +92,17 @@ declare function reports:main( $params ){
        return
          $params?_tpl( 'content/reports/uchenik.konduit', map{} )
     
-    case "uchenik.quality"
+   case "uchenik.quality"
        return
          $params?_tpl( 'content/reports/uchenik.quality', map{} )
-    default
+    
+   case "uchenik.propuski"
+       return
+         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
+    
+   default
       return
-        $params?_tpl( 'content/reports/vedomost.semestr', map{} )
+        $params?_tpl( 'content/reports/uchenik.propuski', map{} )
   
   return
     map{
