@@ -14,8 +14,18 @@ declare function uchenik.propuski:main( $params ){
     fetch:xml(
       'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
     )
+  let $началоПериода := 
+    if(request:parameter('началоПериода'))
+    then(request:parameter('началоПериода'))
+    else(format-date(current-date(), "[Y0001]-[M01]-[D01]"))
+  let $конецПериода := 
+    if(request:parameter('конецПериода'))
+    then(request:parameter('конецПериода'))
+    else(format-date(current-date(), "[Y0001]-[M01]-[D01]"))
   return
     map{
+       'началоПериода' : $началоПериода,
+       'конецПериода' : $конецПериода,
        'пропуски' : <div>{ uchenik.propuski:main( $data, session:get( '000' )) }</div>
     }
 };
