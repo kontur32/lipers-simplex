@@ -11,7 +11,7 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Возраст учащихся', 'uchenik.vozrast2' ],
             [ 'Дни рождения лицеистов', 'uchenik.list'],
             [ 'Список учителей и предметов', 'uchenik.predmet'],
-            [ 'Справки для распечатки', 'uchenik.docs-print']
+            [ 'Справки на печать', 'uchenik.docs-print']
         )
         return
            [ $items, 't', 'Контингент' ]
