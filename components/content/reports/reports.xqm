@@ -18,7 +18,7 @@ declare function reports:main( $params ){
  
   case "teachers.tabel"
       return
-        $params?_tpl( 'content/teacher/teachers.tabel', map{} )	  
+        $params?_tpl( 'content/teacher/teachers.tabel', map{} )  
       
   case "uchenik.jour.ail-new"
       return
@@ -99,7 +99,11 @@ declare function reports:main( $params ){
    case "uchenik.propuski"
        return
          $params?_tpl( 'content/reports/uchenik.propuski', map{} )
-    
+   
+   case "uchenik.docs-print"
+       return
+         $params?_tpl( 'content/reports/uchenik.docs-print', map{} )
+          
    default
       return
         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
