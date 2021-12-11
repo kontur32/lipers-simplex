@@ -22,7 +22,7 @@ declare function uchenik.docs-print:main( $params ){
          <tr>
            <td>{$c}</td>
            <td>{$фио}</td>
-           <td><a class="btn btn-primary" href="{$href}">Справка</a></td>
+           <td><a class="btn btn-primary" href="{$href}">Справка-зачисление</a></td>
          </tr>
     
     let $всегоУчеников := count($ученикиТекущие)
