@@ -1,16 +1,9 @@
 module namespace uchenik.docs-print = 'content/reports/uchenik.docs-print';
 
-import module namespace dateTime = 'dateTime'
-  at 'http://iro37.ru/res/repo/dateTime.xqm';
-
 declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
 
 declare function uchenik.docs-print:main( $params ){
-
-    let $месяцы := ('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь')
-    
-    (: данные в формате "похожем-на-RDF" :)
     let $data := 
       $params?_tpl( 'content/data-api/spisokUchenikov', $params )/table
       
