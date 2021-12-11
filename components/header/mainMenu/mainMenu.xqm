@@ -9,8 +9,9 @@ declare function mainMenu:main( $params as map(*) ){
           (
             [ 'Журнал пропусков', 'teachers.konduit' ],
             [ 'Возраст учащихся', 'uchenik.vozrast2' ],
-		        [ 'Дни рождения лицеистов', 'uchenik.list'],
-            [ 'Список учителей и предметов', 'uchenik.predmet']  
+            [ 'Дни рождения лицеистов', 'uchenik.list'],
+            [ 'Список учителей и предметов', 'uchenik.predmet'],
+            [ 'Справки для распечатки', 'uchenik.docs-print']
         )
         return
            [ $items, 't', 'Контингент' ]
