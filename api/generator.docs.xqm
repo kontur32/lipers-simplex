@@ -41,7 +41,6 @@ function docs:шаблон($документ as xs:string){
   /api/query/results/subject/printouts/property[@label="URL"]/value[1]/text()
   return
     fetch:binary($URLшаблона)
-   
 };
 
 declare
