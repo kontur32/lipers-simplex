@@ -7,39 +7,50 @@ declare
   %rest:GET
   %rest:query-param( "id", "{ $id }", "" )
   %rest:path( "/lipers-simplex/api/v01/generator/docs/{ $документ }" )
+  %private
 function docs:main( $документ as xs:string, $id as xs:string ){
   let $поляДляВставки := 
-      funct:tpl('content/docs/' || $документ, map{'id' : $id})
-  let $URLшаблона := docs:URLшаблона($документ)
+      funct:tpl('content/docs/' || $документ, map{'id' : $id})/table
+  let $шаблон := docs:шаблон($документ)
+  let $имяВыходногоФайла := $документ || '.docx'
   let $заполненныйШаблон :=
-     docs:заполнитьШаблон($поляДляВставки, $URLшаблона, $документ || '.docx' )
+     docs:заполнитьШаблон($поляДляВставки, $шаблон, $имяВыходногоФайла )
   return
     $заполненныйШаблон
 };
 
-declare function docs:URLшаблона($документ as xs:string){
-  fetch:xml(
-    web:create-url(
-      'http://iro37.ru/xqwiki/api.php',
-      map{
-        'action':'ask',
-        'format':'xml',
-        'query':
-          replace(
-            '[[Категория:Шаблоны Лицея "Перспектива"]][[Слэг шаблона::%1]]|?URL',
-            '%1',
-            $документ
-          )
-      }
-    )
-)
-/api/query/results/subject/printouts/property[@label="URL"]/value[1]/text()
+declare
+  %private
+function docs:шаблон($документ as xs:string){
+  let $URLшаблона := 
+    fetch:xml(
+      web:create-url(
+        'http://iro37.ru/xqwiki/api.php',
+        map{
+          'action':'ask',
+          'format':'xml',
+          'query':
+            replace(
+              '[[Организация::Лицей "Перспектива"]][[Слэг шаблона::%1]]|?URL',
+              '%1',
+              $документ
+            )
+        }
+      )
+  )
+  /api/query/results/subject/printouts/property[@label="URL"]/value[1]/text()
+  return
+    fetch:binary($URLшаблона)
+   
 };
 
 declare
   %private
-function docs:заполнитьШаблон($поля, $URLшаблона, $имяФайла){
-  let $шаблон := fetch:binary($URLшаблона)
+function docs:заполнитьШаблон(
+  $поля as element(table),
+  $шаблон as xs:base64Binary,
+  $имяФайла as xs:string
+){
   let $запрос :=
       <http:request method='POST'>
         <http:multipart media-type = "multipart/form-data" >
