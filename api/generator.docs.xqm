@@ -69,7 +69,7 @@ function docs:заполнитьШаблон(
   let $ответ := 
      http:send-request (
         $запрос,
-        'http://localhost:9984/api/v1/ooxml/docx/template/complete'
+        'http://localhost:8984/api/v1/ooxml/docx/template/complete'
       )
   return
      (
