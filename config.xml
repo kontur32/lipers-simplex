@@ -13,4 +13,5 @@
   <param id = "api.method.getData">http://81.177.136.43:9984/trac/api/v0.1/u/data/</param>
   <param id = "store.yandex.jornal">e9da1b98-dcae-42bf-919e-459113039241</param>
   <param id = "store.yandex.personalData">f6104dd1-b88b-4104-9528-b8a7d473b251</param>
+  <param id = "ooxmlHost">http://localhost:8984</param>
 </config>
