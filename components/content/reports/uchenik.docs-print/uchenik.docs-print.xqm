@@ -22,6 +22,12 @@ declare function uchenik.docs-print:main( $params ){
       let $href3 :=
         '/lipers-simplex/api/v01/generator/docs/dogovorLiceum?id=' ||
         substring-after($i/@id, '#')
+      let $href4 :=
+        '/lipers-simplex/api/v01/generator/docs/dopDogovor?id=' ||
+        substring-after($i/@id, '#')
+      let $href5 :=
+        '/lipers-simplex/api/v01/generator/docs/vznos?id=' ||
+        substring-after($i/@id, '#')
       order by $фио
       count $c
       return
@@ -31,6 +37,8 @@ declare function uchenik.docs-print:main( $params ){
            <td><a class="btn btn-primary" href="{$href}">Справка-зачисление</a></td>
            <td><a class="btn btn-primary" href="{$href2}">Справка-выезд</a></td>
            <td><a class="btn btn-primary" href="{$href3}">Договор</a></td>
+           <td><a class="btn btn-primary" href="{$href4}">Доп. соглашение</a></td>
+           <td><a class="btn btn-primary" href="{$href5}">Взнос</a></td>
          </tr>
     
     let $всегоУчеников := count($ученикиТекущие)
