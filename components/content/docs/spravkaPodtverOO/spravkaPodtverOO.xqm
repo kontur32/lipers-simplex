@@ -10,7 +10,7 @@ declare function взнос:main( $params ){
     $всеУученики
     /table/row[
       if($params?id)
-      then(@id="http://lipers.ru/сущности/схемы/реестрППС#" || $params?id)
+      then(@id="http://lipers.ru/сущности/сотрудники#" || $params?id)
       else(1)
     ]
     
