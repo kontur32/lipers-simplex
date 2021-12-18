@@ -18,7 +18,7 @@ declare function reports:main( $params ){
  
   case "teachers.tabel"
       return
-        $params?_tpl( 'content/teacher/teachers.tabel', map{} )	  
+        $params?_tpl( 'content/teacher/teachers.tabel', map{} )  
       
   case "uchenik.jour.ail-new"
       return
@@ -55,13 +55,24 @@ declare function reports:main( $params ){
           )
         return
           reports:getData( $url )
-    case "uchenik.list"
+    
+	case "teachers.list"
+      return
+        $params?_tpl( 'content/reports/teachers.list', map{} )
+	
+	case "uchenik.list"
       return
         $params?_tpl( 'content/reports/uchenik.list', map{} )
-    case "vedomost.semestr"
+		
+	case "uchenik.predmet"
+      return
+        $params?_tpl( 'content/reports/uchenik.predmet', map{} )
+    
+	case "vedomost.semestr"
        return
          $params?_tpl( 'content/reports/vedomost.semestr', map{} )
-    case "vedomost.dynamics"
+    
+	case "vedomost.dynamics"
        return
          $params?_tpl( 'content/reports/vedomost.dynamics', map{} )
     
@@ -76,13 +87,28 @@ declare function reports:main( $params ){
     case "uchenik.ocenki"
        return
          $params?_tpl( 'content/reports/uchenik.ocenki', map{} )
+                  
+   case "uchenik.konduit"
+       return
+         $params?_tpl( 'content/reports/uchenik.konduit', map{} )
     
-    case "uchenik.quality"
+   case "uchenik.quality"
        return
          $params?_tpl( 'content/reports/uchenik.quality', map{} )
-    default
+    
+   case "uchenik.propuski"
+       return
+         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
+   
+   case "uchenik.docs-print"
+       return
+         $params?_tpl( 'content/reports/uchenik.docs-print', map{} )
+   case "teachers.docs-print"
+       return
+         $params?_tpl( 'content/reports/teachers.docs-print', map{} )       
+   default
       return
-        $params?_tpl( 'content/reports/vedomost.semestr', map{} )
+        $params?_tpl( 'content/reports/uchenik.propuski', map{} )
   
   return
     map{

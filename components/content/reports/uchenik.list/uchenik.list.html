@@ -1,21 +1,8 @@
-<div class = 'row'>
-  <div class = 'col-12 h4'>Выпусники 2021 года</div>
-  <div class = 'col-12'>
-    <table class = 'table-striped'>
-      <thead>
-        <tr class = "text-center">
-          <th rowspan = "2">№ пп</th>
-          <th rowspan = "2">Фамилия</th>
-          <th rowspan = "2">Имя</th>
-          <th rowspan = "2">Отчество</th>
-          <th colspan = "2">Листы диплома</th>
-        </tr>
-        <tr>
-          <th>Лист 1</th>
-          <th>Лист 2</th>
-        </tr>
-      </thead>
-        {{строкиТаблицы}}
-    </table>
+<div>
+  <div>
+    <a href = "{{ссылкаНаИсходныеДанные}}">исходные данные</a>
+    <h5><center>Календарь дней рождений Лицеистов на {{текущийГод}} год</center></h5>
+    <p>Всего в Лицее на {{текущаяДата}} г. обучается {{всегоУчеников}} учеников.</p>
+    <ol>{{списокУчеников}}</ol>
   </div>
 </div>
