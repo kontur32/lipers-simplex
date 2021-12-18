@@ -8,37 +8,25 @@ declare function uchenik.docs-print:main( $params ){
       $params?_tpl( 'content/data-api/spisokUchenikov', $params )/table
       
     let $ученикиТекущие := $data/row[ not(lip:выбытиеОО/text()) ]   
-    
+    let $документы :=
+      (
+        ['Справка-зачисление','spravkaZachislenie'],
+        ['Справка-выезд','spravkaVyezd'],
+        ['Договор','dogovorLiceum'],
+        ['Доп. соглашение','dopDogovor'],
+        ['Взнос','vznos']
+      )
     let $списокУчеников :=   
       for $i in  $ученикиТекущие
       let $фио :=
         $i/sch:familyName || ' ' || $i/sch:givenName || ' ' ||$i/lip:отчество
-      let $href :=
-        '/lipers-simplex/api/v01/generator/docs/spravkaZachislenie?id=' ||
-        substring-after($i/@id, '#')
-      let $href2 :=
-        '/lipers-simplex/api/v01/generator/docs/spravkaVyezd?id=' ||
-        substring-after($i/@id, '#')
-      let $href3 :=
-        '/lipers-simplex/api/v01/generator/docs/dogovorLiceum?id=' ||
-        substring-after($i/@id, '#')
-      let $href4 :=
-        '/lipers-simplex/api/v01/generator/docs/dopDogovor?id=' ||
-        substring-after($i/@id, '#')
-      let $href5 :=
-        '/lipers-simplex/api/v01/generator/docs/vznos?id=' ||
-        substring-after($i/@id, '#')
       order by $фио
       count $c
       return
          <tr>
            <td>{$c}</td>
            <td>{$фио}</td>
-           <td><a class="btn btn-primary" href="{$href}">Справка-зачисление</a></td>
-           <td><a class="btn btn-primary" href="{$href2}">Справка-выезд</a></td>
-           <td><a class="btn btn-primary" href="{$href3}">Договор</a></td>
-           <td><a class="btn btn-primary" href="{$href4}">Доп. соглашение</a></td>
-           <td><a class="btn btn-primary" href="{$href5}">Взнос</a></td>
+           {uchenik.docs-print:кнопкиДокументов($документы, $i/@id/data())}
          </tr>
     
     let $всегоУчеников := count($ученикиТекущие)
@@ -51,4 +39,25 @@ declare function uchenik.docs-print:main( $params ){
         'всегоУчеников' : $всегоУчеников,
         'списокУчеников' : $списокУчеников
       }
+};
+
+declare 
+  %private
+function uchenik.docs-print:кнопкиДокументов(
+  $документы as item()*,
+  $id as xs:string
+){
+  for $doc in $документы 
+  let $href := uchenik.docs-print:href($doc?2, $id)
+  return
+    <td><a class="btn btn-primary" href="{$href}">{$doc?1}</a></td>
+};
+
+declare 
+  %private
+function uchenik.docs-print:href($слэг as xs:string, $id as xs:string){
+   web:create-url(
+    '/lipers-simplex/api/v01/generator/docs/' || $слэг,
+    map{'id':$id}
+  )
 };

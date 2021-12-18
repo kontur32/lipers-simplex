@@ -13,8 +13,11 @@ declare function teachers.docs-print:main( $params ){
       let $фио :=
         $i/sch:familyName || ' ' || $i/sch:givenName || ' ' ||$i/lip:отчество
       let $href :=
-        '/lipers-simplex/api/v01/generator/docs/spravkaPodtverOO?id=' ||
-        substring-after($i/@id, '#')
+        web:create-url(
+          '/lipers-simplex/api/v01/generator/docs/spravkaPodtverOO',
+          map{'id':$i/@id}
+        )
+       
       order by $фио
       count $c
       return

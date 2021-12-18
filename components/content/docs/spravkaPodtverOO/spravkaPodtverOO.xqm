@@ -6,14 +6,7 @@ declare namespace lip = 'http://lipers.ru/схема';
 declare function взнос:main( $params ){
   let $всеУученики :=
     $params?_tpl( 'content/data-api/spisokUchitel', $params )
-  let $ученик := 
-    $всеУученики
-    /table/row[
-      if($params?id)
-      then(@id="http://lipers.ru/сущности/сотрудники#" || $params?id)
-      else(1)
-    ]
-    
+  let $ученик := $всеУученики/table/row[@id=$params?id]
   let $данные := 
         <table>
           <row id = 'fields'>

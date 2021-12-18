@@ -6,13 +6,13 @@ import module namespace funct="funct" at "../functions/functions.xqm";
 declare 
   %rest:GET
   %rest:query-param( "id", "{ $id }", "" )
-  %rest:path( "/lipers-simplex/api/v01/generator/docs/{ $документ }" )
+  %rest:path( "/lipers-simplex/api/v01/generator/docs/{ $слэгДокумента }" )
   %private
-function docs:main( $документ as xs:string, $id as xs:string ){
+function docs:main( $слэгДокумента as xs:string, $id as xs:string ){
   let $поляДляВставки := 
-      funct:tpl('content/docs/' || $документ, map{'id' : $id})/table
-  let $шаблон := docs:шаблон($документ)
-  let $имяВыходногоФайла := $документ || '.docx'
+      funct:tpl('content/docs/' || $слэгДокумента, map{'id' : $id})/table
+  let $шаблон := docs:шаблон($слэгДокумента)
+  let $имяВыходногоФайла := $слэгДокумента || '.docx'
   let $заполненныйШаблон :=
      docs:заполнитьШаблон($поляДляВставки, $шаблон, $имяВыходногоФайла )
   return
@@ -21,7 +21,7 @@ function docs:main( $документ as xs:string, $id as xs:string ){
 
 declare
   %private
-function docs:шаблон($документ as xs:string){
+function docs:шаблон($слэгДокумента as xs:string){
   let $URLшаблона := 
     fetch:xml(
       web:create-url(
@@ -33,7 +33,7 @@ function docs:шаблон($документ as xs:string){
             replace(
               '[[Организация::Лицей "Перспектива"]][[Слэг шаблона::%1]]|?URL',
               '%1',
-              $документ
+              $слэгДокумента
             )
         }
       )

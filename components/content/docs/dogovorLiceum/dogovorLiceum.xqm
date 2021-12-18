@@ -6,13 +6,7 @@ declare namespace lip = 'http://lipers.ru/схема';
 declare function договорОО:main( $params ){
   let $всеУученики :=
     $params?_tpl( 'content/data-api/spisokUchenikov', $params )
-  let $ученик := 
-    $всеУученики
-    /table/row[
-      if($params?id)
-      then(@id="http://lipers.ru/сущности/ученики#" || $params?id)
-      else(1)
-    ]
+  let $ученик := $всеУученики/table/row[@id=$params?id]
     
   let $данные := 
         <table>
