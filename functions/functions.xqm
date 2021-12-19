@@ -83,7 +83,10 @@ declare function funct:tpl( $app, $params ){
   
   let $tpl := function( $app, $params ){ funct:tpl( $app, $params ) }
   let $config := function( $param ){ $config:param( $param ) }
-  let $getFile := function( $path,$xq ){ funct:getFile( $path, $xq ) }
+  let $getFile :=
+    function( $path,$xq ){ funct:getFile( $path, $xq ) }
+  let $getFileStore :=
+    function( $path,$xq, $storeID ){funct:getFile( $path, $xq, $storeID )}
   let $getFileRDF := function( $path, $xq, $schema, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $storeID ) }
   
   let $result :=
@@ -92,7 +95,7 @@ declare function funct:tpl( $app, $params ){
           $query, 
           map{ 'params':
             map:merge( 
-              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile, '_getFileRDF' : $getFileRDF } )
+              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF } )
             )
           }
         ),
@@ -106,7 +109,7 @@ declare function funct:tpl( $app, $params ){
 
 declare
   %public
-function funct:getFileRaw(  $fileName, $storeID, $access_token ){
+function funct:getFileRaw( $fileName, $storeID, $access_token ){
  let $href := 
    web:create-url(
      $config:param( "api.method.getData" ) || 'stores/' ||  $storeID || '/file',
@@ -144,10 +147,9 @@ function funct:getFileRDF( $path, $xq, $schema, $storeID ){
    }
 };
 
-
 declare
   %public
-function funct:getFile(  $fileName, $xq, $storeID, $access_token ){
+function funct:getFile($fileName, $xq, $storeID, $access_token){
  let $href := 
    web:create-url(
      $config:param( "api.method.getData" ) || 'stores/' ||  $storeID,
@@ -165,10 +167,30 @@ function funct:getFile(  $fileName, $xq, $storeID, $access_token ){
    }
 };
 
-
 declare
   %public
-function funct:getFile( $fileName, $xq, $storeLabel as xs:string ){
+function funct:getFile($fileName, $xq, $storeID){
+ let $href := 
+   web:create-url(
+     $config:param( "api.method.getData" ) || 'stores/' ||  $storeID,
+     map{
+       'access_token' : session:get( 'access_token' ),
+       'path' : $fileName,
+       'xq' : $xq
+     }
+   )
+ return
+   try{
+     fetch:xml( $href )
+   }catch*{
+     try{ fetch:text( $href ) }catch*{}
+   }
+};
+
+(:
+declare
+  %public
+function funct:getFile($fileName, $xq, $storeLabel as xs:string){
   funct:getFile(
     $fileName,
     $xq,
@@ -176,6 +198,9 @@ function funct:getFile( $fileName, $xq, $storeLabel as xs:string ){
     session:get( 'access_token' )
   )
 };
+
+:)
+
 
 declare
   %public
