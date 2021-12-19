@@ -10,13 +10,14 @@ declare function uchenik.vozrast:main( $params ){
     if( request:parameter( 'дата' ) )
     then( xs:date( request:parameter( 'дата' ) ) )
     else( xs:date( '2021-04-06' )  ) 
-  
+
   let $data :=
-    $params?_getFile(
-       'Kids/kids-site-lipers.xlsx',
-       './file/table[ @label = "ППС" ]'
+    $params?_getFileStore(
+       'авторизация/lipersKids.xlsx',
+       './file/table[1]',
+       $params?_config('store.yandex.personalData')
      )
-  
+
   let $детиВсего :=
     $data/table/row
     [   
