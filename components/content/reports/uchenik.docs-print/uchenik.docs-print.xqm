@@ -5,8 +5,7 @@ declare namespace lip = 'http://lipers.ru/схема';
 
 declare function uchenik.docs-print:main( $params ){
     let $data := 
-      $params?_tpl( 'content/data-api/spisokUchenikov', $params )/table
-      
+      $params?_tpl( 'content/data-api/spisokUchenikov', $params )/table 
     let $ученикиТекущие := $data/row[ not(lip:выбытиеОО/text()) ]   
     let $документы :=
       (
