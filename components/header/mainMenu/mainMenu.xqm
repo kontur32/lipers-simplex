@@ -6,7 +6,8 @@ declare function mainMenu:main( $params as map(*) ){
     case 'teacher'
       return
         let $items := 
-          (
+          (            
+            [ 'Адреса и контакты', 'uchenik.adress' ],
             [ 'Возраст учащихся', 'uchenik.vozrast2' ],
             [ 'Дни рождения лицеистов', 'uchenik.list'],
             [ 'Список учителей и предметов', 'uchenik.predmet'],

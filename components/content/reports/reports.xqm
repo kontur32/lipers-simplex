@@ -106,6 +106,10 @@ declare function reports:main( $params ){
    case "teachers.docs-print"
        return
          $params?_tpl( 'content/reports/teachers.docs-print', map{} )       
+   case "uchenik.adress"
+       return
+         $params?_tpl( 'content/reports/uchenik.adress', map{} )  
+   
    default
       return
         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
