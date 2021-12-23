@@ -1,5 +1,7 @@
 module namespace teachers.docs-print = 'content/reports/teachers.docs-print';
 
+import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
+
 declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
 
@@ -20,10 +22,24 @@ declare function teachers.docs-print:main( $params ){
        
       order by $фио
       count $c
+      
+      let $yearLipers := 
+        let $date := $i/lip:трудоустройствоОО
+        return
+          if( $date )
+          then(
+            let $max := current-date()
+            let $min := ( $i/lip:трудоустройствоОО )
+            return
+              dateTime:yearsMonthsDaysCount( $max, $min )
+          )
+          else('н/д')
+      
       return
          <tr>
            <td>{$c}</td>
            <td>{$фио}</td>
+           <td>{$yearLipers}</td>
            <td><a class="btn btn-primary" href="{$href}">Справка-подтверждение</a></td>
          </tr>
     

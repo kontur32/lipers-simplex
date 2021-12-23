@@ -10,7 +10,7 @@ declare function uchenik.vozrast:main( $params ){
     if( request:parameter( 'дата' ) )
     then( xs:date( request:parameter( 'дата' ) ) )
     else( xs:date( '2021-04-06' )  ) 
-
+    
   let $data :=
     $params?_getFileStore(
        'авторизация/lipersKids.xlsx',
