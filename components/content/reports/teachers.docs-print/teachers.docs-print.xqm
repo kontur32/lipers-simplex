@@ -39,10 +39,10 @@ declare function teachers.docs-print:main( $params ){
          <tr>
            <td>{$c}</td>
            <td>{$фио}</td>
-           <td>{$yearLipers}</td>
+           <td>Стаж в Лицее {dateTime:transform-PYMD-1(xs:duration($yearLipers)) }</td>
            <td><a class="btn btn-primary" href="{$href}">Справка-подтверждение</a></td>
          </tr>
-    
+  
     let $всегоСотрудников := count($сотрудникиТекущие)
     let $текущаяДата := format-date(current-date(), "[D01].[M01].[Y0001]")    
     let $текущийГод := year-from-date(current-date())
