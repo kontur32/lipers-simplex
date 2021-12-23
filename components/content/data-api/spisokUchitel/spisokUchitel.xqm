@@ -1,8 +1,10 @@
 module namespace spisokUchitel = 'content/data-api/spisokUchitel';
 
+declare namespace sch = 'http://schema.org';
+declare namespace lip = 'http://lipers.ru/схема';
+
 declare function spisokUchitel:main( $params ){
   let $учителя := spisokUchitel:списокВсехУчителей( $params )
-  
   return
     map{'данные' : $учителя}
 };

@@ -3,10 +3,11 @@ module namespace uchenik.docs-print = 'content/reports/uchenik.docs-print';
 declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
 
+
+
 declare function uchenik.docs-print:main( $params ){
     let $data := 
-      $params?_tpl( 'content/data-api/spisokUchenikov', $params )/table
-      
+      $params?_tpl( 'content/data-api/spisokUchenikov', $params )/table 
     let $ученикиТекущие := $data/row[ not(lip:выбытиеОО/text()) ]   
     let $документы :=
       (
@@ -14,18 +15,28 @@ declare function uchenik.docs-print:main( $params ){
         ['Справка-выезд','spravkaVyezd'],
         ['Договор','dogovorLiceum'],
         ['Доп. соглашение','dopDogovor'],
-        ['Взнос','vznos']
+        ['Взнос','vznos'],
+        ['Справка-обучение','spravkaObuchOO']
       )
+    
+
+   
     let $списокУчеников :=   
       for $i in  $ученикиТекущие
       let $фио :=
-        $i/sch:familyName || ' ' || $i/sch:givenName || ' ' ||$i/lip:отчество
-      order by $фио
+        $i/sch:familyName || ' ' || $i/sch:givenName || ' ' ||$i/lip:отчество           
+      let $класс := $i/lip:классБазаОО/text()   
+      let $n :=
+        if( request:parameter( 'список' ) )
+        then( $фио )
+        else( xs:integer($класс) )      
+      order by $n    
       count $c
-      return
+    return
          <tr>
            <td>{$c}</td>
            <td>{$фио}</td>
+           <td>{$класс}</td>
            {uchenik.docs-print:кнопкиДокументов($документы, $i/@id/data())}
          </tr>
     
