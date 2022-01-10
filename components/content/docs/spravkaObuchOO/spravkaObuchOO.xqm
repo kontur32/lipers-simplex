@@ -6,7 +6,7 @@ declare namespace lip = 'http://lipers.ru/схема';
 declare function справкаОбучениеОО:main( $params ){
   let $всеУученики :=
     $params?_tpl( 'content/data-api/spisokUchenikov', $params )
-  let $ученик := $всеУученики/table/row[@id=$params?id]
+  let $ученик := $всеУученики/table/row[@id=$params?id and not(lip:выбытиеОО/text())][last()]
     
   let $данные := 
         <table>
