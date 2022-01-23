@@ -55,25 +55,13 @@ declare function uchenik.litkoinAll:карточкиУчеников( $data, $н
         'fio' : $имяУченика
       }
     )
-  let $QRlink :=
-    let $shortLink :=
-      fetch:text('https://clck.ru/--?url=' || web:encode-url(  $hrefLitkoin ))
-    return  
-      web:create-url(
-        'https://chart.googleapis.com/chart',
-        map{
-          'cht': 'qr',
-          'chs' : '200x200',
-          'choe' : 'UTF-8',
-          'chld' : 'H',
-          'chl' : $shortLink            
-        }
-      )
+  let $QRlink := uchenik.litkoinAll:QRlink($hrefLitkoin)
   
   let $result := 
     <div>
       <p>Журнал успеваемости ученика: { $имяУченика }</p>
       <p><a href="{$QRlink}">личный кабинет</a></p>
+      <p><img src="{$QRlink}"/></p>
       <p>Подсчет литкоинов</p>
       <table  class = "table table-striped table-bordered">
         <tr class="text-center"> 

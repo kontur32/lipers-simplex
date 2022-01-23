@@ -21,6 +21,7 @@ function check:litcoin(){
     then(
       if($номерЛичногоДела)
       then(
+        session:close(),
         session:set( "login",  request:parameter( "login" ) ),
         session:set( "grants", 'student' ),
         session:set( "роль", request:parameter( "fio" ) ),
