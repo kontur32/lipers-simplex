@@ -117,6 +117,14 @@ declare function reports:main( $params ){
        return
          $params?_tpl( 'content/reports/biblioteka.list', map{} )
    
+   case "uchenik.litkoinAll"
+       return
+         $params?_tpl( 'content/reports/uchenik.litkoinAll', map{} )
+   
+   case "uchenik.litkoin"
+       return
+         $params?_tpl( 'content/reports/uchenik.litkoin', map{} )
+   
    default
       return
         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
