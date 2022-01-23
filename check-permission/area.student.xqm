@@ -17,10 +17,8 @@ declare
 function check:litcoin(){
  let $номерЛичногоДела := request:parameter( "ld" )
  return
-    if(not(session:get('login')))
+    if($номерЛичногоДела )
     then(
-      if($номерЛичногоДела)
-      then(
         session:close(),
         session:set( "login",  request:parameter( "login" ) ),
         session:set( "grants", 'student' ),
@@ -30,7 +28,9 @@ function check:litcoin(){
           'access_token', login:getToken( $config:param( 'authHost' ), $config:param( 'login' ), $config:param( 'password' ) )
         )
       )
-      else(web:redirect("/lipers-simplex"))
-    )
-    else()
+     else(
+       if(session:get('login'))
+       then()
+       else(web:redirect("/lipers-simplex"))
+     )
 };
