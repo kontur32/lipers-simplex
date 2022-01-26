@@ -6,12 +6,15 @@ declare function mainMenu:main( $params as map(*) ){
     case 'teacher'
       return
         let $items := 
-          (
-            [ 'Журнал пропусков', 'teachers.konduit' ],
-            [ 'Возраст учащихся', 'uchenik.vozrast2' ]
-          )
+          (            
+            [ 'Адреса и контакты', 'uchenik.adress' ],
+            [ 'Возраст учащихся', 'uchenik.vozrast2' ],
+            [ 'Дни рождения лицеистов', 'uchenik.list'],
+            [ 'Список учителей и предметов', 'uchenik.predmet'],
+            [ 'Справки на печать', 'uchenik.docs-print']
+        )
         return
-           [ $items, 't', 'Форма для преподавателя' ]
+           [ $items, 't', 'Контингент' ]
     case 'student'
       return
         let $items := 
@@ -19,16 +22,80 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Оценки', 'uchenik.ocenki' ]
           )
         return
-          [ $items, 's', 'Форма для студента' ]
+          [ $items, 's', 'Оценки' ]
     default
       return
         [ ( [ '', '' ] ), '', '' ]
 
+  let $пункты2 :=
+    switch ( $params?area )
+    case 'teacher'
+      return
+       let $items2 := 
+          (            
+            [ 'Возраст и стажи', 'teachers.kadr'],
+            [ 'Дни рождения сотрудников', 'teachers.list' ],
+            [ 'Справки на печать', 'teachers.docs-print']
+            
+          )
+        return
+           [ $items2, 't', 'Кадры' ]
+    default
+      return
+        [ ( [ '', '' ] ), '', '' ]
+        
+        
+   let $пункты3 :=
+    switch ( $params?area )
+    case 'teacher'
+      return
+        let $items3 := 
+          (
+            [ 'Журнал пропусков', 'ucheniki.propuski' ],
+            [ 'Оценки за четверть', 'uchenik.konduit' ],
+            [ 'Литкоины', 'uchenik.litkoinAll' ]
+
+          )
+        return
+           [ $items3, 't', 'ОКО' ]
+    case 'student'
+      return
+        let $items := 
+          (
+            [ 'Литкоины', 'uchenik.litkoin' ]
+          )
+        return
+          [ $items, 's', 'Литкоины' ]
+    default
+      return
+        [ ( [ '', '' ] ), '', '' ]
+    
+    let $пункты4 :=
+    switch ( $params?area )
+    case 'teacher'
+      return
+       let $items4 := 
+          (            
+            [ 'Каталог учебников', 'biblioteka.list' ],
+            [ 'Статистика', 'teachers.docs-print']
+          )
+        return
+           [ $items4, 't', 'Библиотека' ]
+    default
+      return
+        [ ( [ '', '' ] ), '', '' ]
+    
   let $меню :=
     map{
-      'главная' : '/lipers-simplex/' || $пункты?2,
-      'названиеРаздела' : $пункты?3,
-      'пункты' : mainMenu:items( $пункты?1, $пункты?2, $пункты?3 )
+    'главная' : '/lipers-simplex/' || $пункты?2,
+    'названиеРаздела'  : $пункты?3,
+	  'названиеРаздела2' : $пункты2?3,
+    'названиеРаздела3' : $пункты3?3,
+    'названиеРаздела4' : $пункты4?3,
+    'пункты'  : mainMenu:items( $пункты?1, $пункты?2, $пункты?3 ),
+	  'пункты2' : mainMenu:items( $пункты2?1, $пункты2?2, $пункты2?3 ),
+    'пункты3' : mainMenu:items( $пункты3?1, $пункты3?2, $пункты3?3 ),
+    'пункты4' : mainMenu:items( $пункты4?1, $пункты4?2, $пункты4?3 )
     }
   return
      $меню

@@ -5,5 +5,5 @@ declare
   %rest:path( "/lipers-simplex/api/v01/logout" )
 function logout:main(){
   session:close(),
-  web:redirect( "/lipers-simplex" )
+  web:redirect("https://portal.titul24.ru/logout.php")
 };

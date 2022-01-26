@@ -10,13 +10,14 @@ declare function uchenik.vozrast:main( $params ){
     if( request:parameter( 'дата' ) )
     then( xs:date( request:parameter( 'дата' ) ) )
     else( xs:date( '2021-04-06' )  ) 
-  
+    
   let $data :=
-    $params?_getFile(
-       'Kids/kids-site-lipers.xlsx',
-       './file/table[ @label = "ППС" ]'
+    $params?_getFileStore(
+       'авторизация/lipersKids.xlsx',
+       './file/table[1]',
+       $params?_config('store.yandex.personalData')
      )
-  
+
   let $детиВсего :=
     $data/table/row
     [   
@@ -153,6 +154,7 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
       <tr>
         <td>{ $c }</td>
         <td>{ $i/cell[ @label = "Фамилия,"]/text()}</td>
+		<td>{ $i/cell[ @label = "имя,"]/text()}</td>
         <td class = "text-center">{  $датаРождения }</td>
         <td class = "text-center">
           { $возрастУченика }
@@ -168,6 +170,7 @@ declare function uchenik.vozrast:детиПоКлассам( $детиВсего
          <tr class = "text-center">
             <th>№ пп</th>
             <th>Фамилия</th>
+			<th>Имя</th>
             <th>Дата рождения</th>
             <th>Возраст</th>
             <th>Дата зачисления</th>
