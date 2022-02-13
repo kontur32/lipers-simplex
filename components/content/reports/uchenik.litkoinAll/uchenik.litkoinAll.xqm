@@ -11,12 +11,12 @@ declare function uchenik.litkoinAll:main( $params ){
   let $началоПериода :=
     if( request:parameter( 'началоПериода' ) )
     then( ( request:parameter( 'началоПериода' ) ) )
-    else(('2022-01-10') ) 
+    else(('2022-01-31') ) 
   
   let $конецПериода :=
     if( request:parameter( 'конецПериода' ) )
     then(( request:parameter( 'конецПериода' ) ) )
-    else( ('2022-01-22') ) 
+    else( ('2022-03-01') ) 
   
   let $data:=
     fetch:xml(
