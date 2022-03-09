@@ -33,7 +33,7 @@ declare function uchenik.vozrast:main( $params ){
     map{
       'дата' : xs:string( $текущаяДата ),
       'детиПоКлассам' :  uchenik.vozrast:детиПоКлассам( $детиВсего, $текущаяДата ) ,
-      'детиПоВозрасту' : uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата )
+      'детиПоВозрасту' : uchenik.vozrast:детиПоВозрасту( $детиВсего, $текущаяДата ) 
     }
 };
 
@@ -63,6 +63,8 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
       <tr>
         <td>{ $класс }</td>
         <td class = "text-center">{ count( $детейВКлассе ) }</td>
+        <td class = "text-center">{ count( $детейВКлассе[ cell[ @label = 'пол' ] = 'м']  ) }</td>
+        <td class = "text-center">{ count( $детейВКлассе[ cell[ @label = 'пол' ] = 'ж']  ) }</td>
         {
           for $j in $возраст
           let $детиВозраста :=
@@ -84,14 +86,22 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
         }
       </tr>
   
-  let $детиВсего :=
+
+  let $детиВсегоНОО :=
+   let $НОО := ( 1 to 4 )    
+    let $детейНОО := 
+            (($детиВсего[ $текущийКласс( ., $текущаяДата ) = $НОО ]))
+            return
+      
         <tr>
-          <td>Всего </td>
-          <td class = "text-center">{ count( $детиВсего ) }</td>
+          <td>Всего НОО </td>
+          <td class = "text-center">{ (sum (count ($детейНОО ))) }</td>
+          <td class = "text-center">{ count( $детейНОО[ cell[ @label = 'пол' ] = 'м'] ) }</td>
+          <td class = "text-center">{ count( $детейНОО[ cell[ @label = 'пол' ] = 'ж'] ) }</td>
           {
             for $j in $возраст
             let $детиВозраста :=
-             $детиВсего[
+             $детейНОО[
                uchenik.vozrast:возраст( 
                $текущаяДата,
                dateTime:dateParse( cell[ @label = 'дата рождения' ]/text() )
@@ -105,11 +115,98 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
               )
           }
         </tr>
+        
+        
+  let $детиВсегоООО :=
+   let $ООО := ( 5 to 9 )    
+    let $детейООО := 
+            (($детиВсего[ $текущийКласс( ., $текущаяДата ) = $ООО ]))
+            return
+      
+        <tr>
+          <td>Всего ООО </td>
+          <td class = "text-center">{ (sum (count ($детейООО ))) }</td>
+          <td class = "text-center">{ count( $детейООО[ cell[ @label = 'пол' ] = 'м'] ) }</td>
+          <td class = "text-center">{ count( $детейООО[ cell[ @label = 'пол' ] = 'ж'] ) }</td>
+          {
+            for $j in $возраст
+            let $детиВозраста :=
+             $детейООО[
+               uchenik.vozrast:возраст( 
+               $текущаяДата,
+               dateTime:dateParse( cell[ @label = 'дата рождения' ]/text() )
+             ) = $j
+              ]
+            return
+              (
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м' ] ) }</td>,
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж' ] ) }</td>,
+                <td class = "text-center">{ count( $детиВозраста ) }</td>
+              )
+          }
+        </tr>
+  
+  let $детиВсегоСОО :=
+   let $СОО := ( 10 to 11 )    
+    let $детейСОО := 
+            (($детиВсего[ $текущийКласс( ., $текущаяДата ) = $СОО ]))
+            return
+      
+        <tr>
+          <td>Всего СОО </td>
+          <td class = "text-center">{ (sum (count ($детейСОО ))) }</td>
+          <td class = "text-center">{ count( $детейСОО[ cell[ @label = 'пол' ] = 'м'] ) }</td>
+          <td class = "text-center">{ count( $детейСОО[ cell[ @label = 'пол' ] = 'ж'] ) }</td>
+          {
+            for $j in $возраст
+            let $детиВозраста :=
+             $детейСОО[
+               uchenik.vozrast:возраст( 
+               $текущаяДата,
+               dateTime:dateParse( cell[ @label = 'дата рождения' ]/text() )
+             ) = $j
+              ]
+            return
+              (
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м' ] ) }</td>,
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж' ] ) }</td>,
+                <td class = "text-center">{ count( $детиВозраста ) }</td>
+              )
+          }
+        </tr>
+   
+
+  
+  let $детиВсего :=
+        <tr>
+          <th>Всего </th>
+          <th class = "text-center">{ count( $детиВсего ) }</th>
+          <th class = "text-center">{ count( $детиВсего[ cell[ @label = 'пол' ] = 'м'] ) }</th>
+          <th class = "text-center">{ count( $детиВсего[ cell[ @label = 'пол' ] = 'ж'] ) }</th>
+          {
+            for $j in $возраст
+            let $детиВозраста :=
+             $детиВсего[
+               uchenik.vozrast:возраст( 
+               $текущаяДата,
+               dateTime:dateParse( cell[ @label = 'дата рождения' ]/text() )
+             ) = $j
+              ]
+            return
+              (
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'м' ] ) }</td>,
+                <td>{ count( $детиВозраста[ cell[ @label = 'пол' ] = 'ж' ] ) }</td>,
+                <th class = "text-center">{ count( $детиВозраста ) }</th>
+              )
+          }
+        </tr>
   return
      <table class = 'table-striped'>
        <tr class = "text-center">
           <th rowspan = "3">Класс</th>
           <th rowspan = "3">В классе</th>
+          <th rowspan = "3">Мальчики</th>
+          <th rowspan = "3">Девочки</th>
           <th colspan = "39">Возраст</th>
         </tr>
         <tr>
@@ -131,6 +228,9 @@ declare function uchenik.vozrast:детиПоВозрасту( $детиВсег
         }</tr>
         { $детиПоКлассам }
         { $детиВсего }
+        { $детиВсегоНОО }
+        { $детиВсегоООО }
+        { $детиВсегоСОО }
      </table>
 };
 
@@ -204,6 +304,8 @@ function
     $началоГода(  $текущаяДата  ) - 
     $началоГода( $датаЗачисления  )
 };
+
+
 
 declare
   %private
