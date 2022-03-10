@@ -88,14 +88,14 @@ declare function funct:tpl( $app, $params ){
   let $getFileStore :=
     function( $path,$xq, $storeID ){funct:getFile( $path, $xq, $storeID )}
   let $getFileRDF := function( $path, $xq, $schema, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $storeID ) }
-  
+  let $getFileRDFparams := function( $path, $xq, $schema, $params, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $params, $storeID ) }
   let $result :=
     prof:track( 
       xquery:eval(
           $query, 
           map{ 'params':
             map:merge( 
-              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF } )
+              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF, '_getFileRDFparams' : $getFileRDFparams } )
             )
           }
         ),
@@ -129,21 +129,46 @@ function funct:getFileRaw( $fileName, $storeID, $access_token ){
 declare
   %public
 function funct:getFileRDF( $path, $xq, $schema, $storeID ){
- let $href := 
-   web:create-url(
-     $config:param( "api.method.getData" ) || 'stores/' ||  $storeID || '/rdf',
-     map{
+  let $params :=
+   map{
        'access_token' : session:get('access_token'),
        'path' : $path,
        'xq' : $xq,
        'schema' : $schema
      }
+ let $href := 
+   web:create-url(
+     $config:param( "api.method.getData" ) || 'stores/' ||  $storeID || '/rdf',
+     $params
    )
  return
    try{
      fetch:xml( $href )
    }catch*{
      'Ошибка чтения данных'
+   }
+};
+
+declare
+  %public
+function funct:getFileRDF( $path, $xq, $schema, $params, $storeID ){
+ let $p :=
+   map{
+       'access_token' : session:get('access_token'),
+       'path' : $path,
+       'xq' : $xq,
+       'schema' : $schema
+     }
+ let $href := 
+   web:create-url(
+     'http://localhost:9984/trac/api/v0.2/u/data/' || 'stores/' ||  $storeID || '/rdf',
+     map:merge(($p,$params))
+   )
+ return
+   try{
+     fetch:xml( $href )
+   }catch*{
+     'Ошибка чтения данных...'
    }
 };
 
@@ -186,21 +211,6 @@ function funct:getFile($fileName, $xq, $storeID){
      try{ fetch:text( $href ) }catch*{}
    }
 };
-
-(:
-declare
-  %public
-function funct:getFile($fileName, $xq, $storeLabel as xs:string){
-  funct:getFile(
-    $fileName,
-    $xq,
-    $config:param( $storeLabel ), 
-    session:get( 'access_token' )
-  )
-};
-
-:)
-
 
 declare
   %public

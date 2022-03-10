@@ -71,7 +71,7 @@ function login:main( $login as xs:string, $password as xs:string ){
 
 
 declare
-  %private
+  %public
 function login:getToken( $host, $username, $password ) as xs:string*
 {
   let $request := 

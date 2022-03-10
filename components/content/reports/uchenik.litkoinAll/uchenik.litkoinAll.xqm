@@ -3,24 +3,20 @@ module namespace uchenik.litkoinAll = 'content/reports/uchenik.litkoinAll';
 import module namespace stud = 'lipers/modules/student' 
   at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm'; 
 
-import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
-
 declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
 
 declare function uchenik.litkoinAll:main( $params ){
-  
-
-  
+ 
   let $началоПериода :=
     if( request:parameter( 'началоПериода' ) )
-    then( xs:date( request:parameter( 'началоПериода' ) ) )
-    else(('2022-01-10') ) 
+    then( ( request:parameter( 'началоПериода' ) ) )
+    else(('2022-01-31') ) 
   
   let $конецПериода :=
     if( request:parameter( 'конецПериода' ) )
-    then( xs:date( request:parameter( 'конецПериода' ) ) )
-    else( ('2022-01-22') ) 
+    then(( request:parameter( 'конецПериода' ) ) )
+    else( ('2022-03-01') ) 
   
   let $data:=
     fetch:xml(
@@ -30,27 +26,16 @@ declare function uchenik.litkoinAll:main( $params ){
     map{
       'началоПериода' : format-date(xs:date( normalize-space($началоПериода) ), "[Y]-[M01]-[D01]"),
       'конецПериода' : format-date(xs:date( normalize-space($конецПериода ) ), "[Y]-[M01]-[D01]"),
-      'литкоин' : <div>{ uchenik.litkoinAll:main6( $data, session:get( '000' ), $началоПериода, $конецПериода )}</div>,
-      'классы' : <div>{ uchenik.litkoinAll:main3( $data, session:get( '000' )) }</div>
+      'литкоин' : <div>{ uchenik.litkoinAll:карточкиУчеников( $data, $началоПериода, $конецПериода )}</div>
     }
 };
 
-declare function uchenik.litkoinAll:main3( $data, $номерЛичногоДела ){  
-     
-  let $u := (1 to 11)   
-    
-  return
-       distinct-values ($u)
-};
-
-declare function uchenik.litkoinAll:main6( $data, $номерЛичногоДела, $началоПериода, $конецПериода ){  
-  for $данные2 in stud:ученики( $data//table[ row[ 1 ]/cell/text() ] )
-  let $номерЛичногоДела := ($данные2?1)
-  
+declare function uchenik.litkoinAll:карточкиУчеников( $data, $началоПериода, $конецПериода ){  
+  for $ученик in stud:ученики( $data//table[ row[ 1 ]/cell/text() ] )
+  let $номерЛичногоДела := $ученик?1
+  let $имяУченика := $ученик?2
   let $tables := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДела ]
-  let $имяУченика := 
-    ( $tables/row[ 1 ]/cell[ text() = $номерЛичногоДела ]/@label/data() )[ 1 ]
-    
+
   let $оценкиПоПредметам := 
     stud:записиПоВсемПредметамЗаПериод(
       $tables,
@@ -60,10 +45,23 @@ declare function uchenik.litkoinAll:main6( $data, $номерЛичногоДе�
     )  
   let $оценкиПромежуточнойАттестации := 
     stud:промежуточнаяАттестацияУченика( $tables, $номерЛичногоДела )
-    
+  
+  let $hrefLitkoin :=
+    web:create-url(
+      'http://81.177.136.43:9984/lipers-simplex/p/s/reports/uchenik.litkoin',
+      map{
+        'ld' : $номерЛичногоДела,
+        'login':'login',
+        'fio' : $имяУченика
+      }
+    )
+  let $QRlink := uchenik.litkoinAll:QRlink($hrefLitkoin)
+  
   let $result := 
     <div>
       <p>Журнал успеваемости ученика: { $имяУченика }</p>
+      <p><a href="{$QRlink}">личный кабинет</a></p>
+      <p><img src="{$QRlink}"/></p>
       <p>Подсчет литкоинов</p>
       <table  class = "table table-striped table-bordered">
         <tr class="text-center"> 
@@ -107,16 +105,19 @@ declare function uchenik.litkoinAll:main6( $data, $номерЛичногоДе�
     $result
 };
 
-
-
-declare function uchenik.litkoinAll:ссылкаНаИсходныеДанные($params){
-  web:create-url(
-     $params?_config( "api.method.getData" ) || 'stores/' ||  $params?_config('store.yandex.personalData') || '/rdf',
-     map{
-       'access_token' : session:get('access_token'),
-       'path' : 'tmp/kids.xlsx',
-       'xq' : '.',
-       'schema' : 'http://81.177.136.43:9984/zapolnititul/api/v2/forms/846524b3-febe-4418-86cc-c7d2f0b7839a/fields'
-     }
-   )
+declare
+  %private
+function uchenik.litkoinAll:QRlink($url){
+  let $shortLink := fetch:text('https://clck.ru/--?url=' || web:encode-url( $url ))
+  return  
+    web:create-url(
+      'https://chart.googleapis.com/chart',
+      map{
+        'cht': 'qr',
+        'chs' : '200x200',
+        'choe' : 'UTF-8',
+        'chld' : 'H',
+        'chl' : $shortLink            
+      }
+    )
 };
