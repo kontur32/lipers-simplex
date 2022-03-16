@@ -68,6 +68,14 @@ declare function uchitel:main( $params ){
             <cell id='http://lipers.ru/схема/пропискаЗП'>{
               $учитель/lip:пропискаЗП/text()
             }</cell>
+            <cell id='http://lipers.ru/схема/должностьТК'>{
+              $учитель/lip:должностьТК/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/приказОтрудоустройстве'>{
+              $учитель/lip:приказОтрудоустройстве/text()
+            }</cell>
+			<cell id='http://lipers.ru/схема/трудоустройствоОО'> {format-date(xs:date($учитель/lip:трудоустройствоОО/text()),
+                "[D01].[M01].[Y0001]") }</cell>
             </row>       
          </table>
   return

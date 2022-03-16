@@ -33,7 +33,8 @@ declare function mainMenu:main( $params as map(*) ){
       return
        let $items2 := 
           (            
-            [ 'Возраст и стажи', 'teachers.kadr'],
+            [ 'Список сотрудников', 'teachers.spisok' ],
+			[ 'Возраст и стажи', 'teachers.kadr'],
             [ 'Дни рождения сотрудников', 'teachers.list' ],
             [ 'Справки на печать', 'teachers.docs-print']
             
