@@ -125,11 +125,15 @@ declare function reports:main( $params ){
        return
          $params?_tpl( 'content/reports/uchenik.litkoin', map{} )
    
+   case "teachers.spisok"
+      return
+        $params?_tpl( 'content/reports/teachers.spisok', map{} )
+   
    default
       return
         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
-  
-  return
+
+   return
     map{
       'отчет' : $адресЗапросаСтраницы
     }

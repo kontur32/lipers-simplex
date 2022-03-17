@@ -10,16 +10,16 @@ declare namespace lip = 'http://lipers.ru/схема';
 declare
   %private
 function
- biblioteka.list:списокВсехКниг($params) as element(table)
+ biblioteka.list:списокВсехКниг($params) as element(table)*
 {
-  $params?_getFileRDF(
+  $params?_getFileRDFparams(
      'Biblioteka/lipersBooks.xlsx' , (: путь к файлу внутри хранилища :)
      '.',
      'http://81.177.136.43:9984/zapolnititul/api/v2/forms/b3d871a0-bea6-4459-b7fb-9480fef40e6a/fields' (: адрес (URL) для доступа к схеме - по этому адресу можно пройти :),
-     $params?_config('store.yandex.personalData') (: идентификатор хранилища :)
-  )/table
+     map{'page':'5;6;7'},
+     $params?_config('store.yandex.personalData.local') (: идентификатор хранилища :)
+  )//table
 };
-
 
 declare function  biblioteka.list:main( $params ){
         
@@ -34,7 +34,7 @@ declare function  biblioteka.list:main( $params ){
           $i/lip:названиеКниги/text()
         
         let $класс := 
-          biblioteka.list:списокВсехКниг ( $params )/@label/data()
+          $i/parent::*/@label/data()
         
         let $авторКниги :=
           $i/lip:автор/text()

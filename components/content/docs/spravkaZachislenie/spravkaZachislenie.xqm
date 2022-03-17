@@ -26,8 +26,14 @@ declare function справкаЗачислениеОО:main( $params ){
                 "[D01].[M01].[Y0001]"
               )
             }</cell>
-            <cell id='http://lipers.ru/схема/классПоступленияОО'>{
+			<cell id='http://lipers.ru/схема/классПоступленияОО'>{
               $ученик/lip:классПоступленияОО/text()
+            }</cell> 
+            <cell id='http://lipers.ru/схема/поступлениеОО'>{
+              format-date(
+                xs:date($ученик/lip:поступлениеОО/text()),
+                "[D01].[M01].[Y0001]"
+              )
             }</cell>            
           </row>       
          </table>

@@ -14,47 +14,30 @@ declare function uchenik.konduit:main( $params ){
     fetch:xml(
       'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
     )
+  let $текущий := (request:parameter(xs:string('класс')))
   return
     map{
-       'оценкиЧетверть' : <div>{ uchenik.konduit:main( $data, session:get( '000' )) }</div>,
-       'классы' : <div>{ uchenik.konduit:main3( $data, session:get( '000' )) }</div>
+       'оценкиЧетверть' : <div>{ uchenik.konduit:main( $data, $текущий) }</div>,
+       'классы' : for $i in (1 to 11) return <a href="{'?класс=' || $i}">{$i}</a>,
+       'класс' : $текущий
     }
 };
 
-declare function uchenik.konduit:main3( $data, $номерЛичногоДела ){  
-     
-  let $u := (1 to 11)   
-    
-  return
-       distinct-values ($u)
-};
-
-declare function uchenik.konduit:main( $data, $номерЛичногоДела ){  
- 
-  for $данные2 in stud:ученики( $data//table[ row[ 1 ]/cell/text() ] )
-  let $номерЛичногоДела := ($данные2?1)
+declare function uchenik.konduit:main($data,  $текущийКласс ){  
+  let $ученики := stud:ученики( $data//table[ row[ 1 ]/cell/text() ][1])
   
-  let $tables := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДела ]
+  for $ученик in $ученики
+  let $номерКласса := $ученик?3 
+  where $номерКласса = ($текущийКласс)
   
-
-  let $имяУченика := 
-    ( $tables/row[ 1 ]/cell[ text() = $номерЛичногоДела ]/@label/data() )[ 1 ]
-     
+  let $оценкиУченика := $data//table[ row[ 1 ]/cell/text() = $ученик?1  ]
   let $оценкиПромежуточнойАттестации := 
-    stud:промежуточнаяАттестацияУченика( $tables, $номерЛичногоДела )
-  
-  let $class := stud:ученики ( $tables )
-  
-  let $menu :=
-    let $i := distinct-values($class?3)
-  let $href := $i
-  return 
-    <a href = '{ $href }'>{ $i }</a>
+    stud:промежуточнаяАттестацияУченика( $оценкиУченика, $ученик?1 )
     
   let $result := 
    <div>   
    <div>   
-   <h6>Оценки за текущий учебный год: { $имяУченика }, {distinct-values($class?3) } класс</h6>     
+   <h6>Оценки за текущий учебный год: { $ученик?2 }, { $номерКласса  } класс</h6>     
    <table class = "table table-striped table-bordered">
      <tr>
            <th width="20%">Предмет</th>
@@ -69,7 +52,11 @@ declare function uchenik.konduit:main( $data, $номерЛичногоДела 
       return 
          <tr> 
            <td> { $p?1 } </td>
-           <td> { $p?2 } </td>
+           <td> { $p?2[ 1 ] } </td>
+           <td> { $p?2[ 2 ] } </td>
+           <td> { $p?2[ 3 ] } </td>
+           <td> { $p?2[ 4 ] } </td>
+           <td> { $p?2[ 5 ] } </td>
          </tr>
       }
     </table>
