@@ -26,38 +26,32 @@ declare function uchenik.konduit:main( $params ){
 declare
   %private
 function
-  uchenik.konduit:списокВсехУчеников($params)
+  uchenik.konduit:списокВсехУчеников($params) as element(row)*
 {
-  let $data :=
     $params?_getFileRDF(
        'авторизация/lipersKids.xlsx', (: путь к файлу внутри хранилища :)
        '.', (: запрос на выборку записей :)
        'http://81.177.136.43:9984/zapolnititul/api/v2/forms/846524b3-febe-4418-86cc-c7d2f0b7839a/fields' (: адрес (URL) для доступа к схеме - по этому адресу можно пройти :),
        $params?_config('store.yandex.personalData') (: идентификатор хранилища :)
-    )/table
-
-  for $i in $data/row
-  where not($i/*:выбытиеОО/text())
-  return
-    [
-      substring-after($i/@id/data(), 'реестрУчеников'),
-      $i/*:familyName || ' ' ||  $i/*:givenName,
-      xs:string($i/*:классПоступленияОО/text())
-    ]
+    )/table/row[not(*:выбытиеОО/text())]
 };
 
 declare function uchenik.konduit:main2($data, $текущийКласс, $ученики ){   
   for $ученик in $ученики
-  let $номерКласса := $ученик?3 
-  where $номерКласса = ($текущийКласс)
-  let $оценкиУченика := $data//table[ row[ 1 ]/cell/text() = $ученик?1  ]
+  let $номерЛичногоДелаУченика := 
+    substring-after($ученик/@id/data(), 'реестрУчеников')
+  let $фиоУченика :=
+    $ученик/*:familyName || ' ' ||  $ученик/*:givenName    
+  let $номерКлассаУченика := xs:string($ученик/*:классПоступленияОО/text()) 
+  where $номерКлассаУченика = $текущийКласс
+  let $оценкиУченика := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДелаУченика  ]
   let $оценкиПромежуточнойАттестации := 
-    stud:промежуточнаяАттестацияУченика( $оценкиУченика, $ученик?1 )
+    stud:промежуточнаяАттестацияУченика( $оценкиУченика, $номерЛичногоДелаУченика )
     
   let $result := 
    <div>   
      <div>   
-     <h6>Оценки за текущий учебный год: { $ученик?2 }, { $номерКласса  } класс</h6>     
+     <h6>Оценки за текущий учебный год: { $фиоУченика }, { $номерКлассаУченика  } класс</h6>     
      <table class = "table table-striped table-bordered">
        <tr>
              <th width="20%">Предмет</th>
