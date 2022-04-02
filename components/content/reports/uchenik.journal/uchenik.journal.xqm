@@ -1,16 +1,22 @@
-module namespace uchenik.ocenki = 'content/reports/uchenik.ocenki';
+module namespace uchenik.journal = 'content/reports/uchenik.journal';
 
 import module namespace stud = 'lipers/modules/student' 
-  at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm';
-  
+  at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm'; 
 import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
 
-declare function uchenik.ocenki:main( $params ){
+declare namespace sch = 'http://schema.org';
+declare namespace lip = 'http://lipers.ru/схема';
+
+declare function uchenik.journal:main( $params ){  
   
   let $началоПериода :=
     if( request:parameter( 'началоПериода' ) )
     then( xs:date( request:parameter( 'началоПериода' ) ) )
-    else( current-date() ) 
+    else(      
+        if (fn:month-from-date(current-date() ) = (06, 07, 08, 09, 10, 11, 12))
+        then (fn:year-from-date(current-date()) || '-09-01')
+        else fn:year-from-date(current-date() ) - 1 || '-09-01'
+        )
   
   let $конецПериода :=
     if( request:parameter( 'конецПериода' ) )
@@ -21,35 +27,58 @@ declare function uchenik.ocenki:main( $params ){
     fetch:xml(
       'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
     )
-
+  let $ученики := uchenik.journal:списокВсехУчеников($params)
+  let $текущий := (request:parameter(xs:string('класс')))
   return
     map{
-      'началоПериода' : format-date(xs:date( $началоПериода ), "[Y]-[M01]-[D01]"),
-      'конецПериода' : format-date(xs:date( $конецПериода ), "[Y]-[M01]-[D01]"),
-      'оценки' : <div>{ uchenik.ocenki:main( $data, session:get( 'номерЛичногоДела' ), $началоПериода, $конецПериода ) }</div>
+       'оценкиТекущие' : <div>{ uchenik.journal:main2($data, $текущий, $ученики) }</div>,
+       'классы' : for $i in (1 to 11) return <a href="{'?класс=' || $i}">{$i}</a>,
+       'класс' : $текущий
     }
 };
-
-declare function uchenik.ocenki:main( $data, $номерЛичногоДела, $началоПериода, $конецПериода ){  
-  let $tables := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДела ]
-  let $имяУченика := 
-    ( $tables/row[ 1 ]/cell[ text() = $номерЛичногоДела ]/@label/data() )[ 1 ]
-    
-  let $оценкиПоПредметам := 
-    stud:записиПоВсемПредметамЗаПериод(
-      $tables,
-      $номерЛичногоДела,
-      xs:date( $началоПериода ),
-      xs:date( $конецПериода )
-    )  
+declare
+  %private
+function
+  uchenik.journal:списокВсехУчеников($params) as element(row)*
+{
+    $params?_getFileRDF(
+       'авторизация/lipersKids.xlsx', (: путь к файлу внутри хранилища :)
+       '.', (: запрос на выборку записей :)
+       'http://81.177.136.43:9984/zapolnititul/api/v2/forms/846524b3-febe-4418-86cc-c7d2f0b7839a/fields' (: адрес (URL) для доступа к схеме - по этому адресу можно пройти :),
+       $params?_config('store.yandex.personalData') (: идентификатор хранилища :)
+    )/table/row[not(*:выбытиеОО/text())]
+};
+declare function uchenik.journal:main2($data, $текущийКласс, $ученики ){   
+  for $ученик in $ученики
+  
+  let $номерЛичногоДелаУченика := 
+    substring-after($ученик/@id/data(), 'реестрУчеников')
+  
+  let $фиоУченика :=
+    $ученик/*:familyName || ' ' ||  $ученик/*:givenName    
+  order by $фиоУченика
+  
+  let $номерКлассаУченика := xs:string($ученик/*:классБазаОО/text()) 
+  where $номерКлассаУченика = $текущийКласс
+  
+  let $оценкиУченика := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДелаУченика  ]
   
   let $оценкиПромежуточнойАттестации := 
-    stud:промежуточнаяАттестацияУченика( $tables, $номерЛичногоДела )
-    
+    stud:промежуточнаяАттестацияУченика( $оценкиУченика, $номерЛичногоДелаУченика )
+  
+  let $оценкиПоПредметам := 
+    stud:записиПоВсемПредметамЗаПериод(
+      $оценкиУченика,
+      $номерЛичногоДелаУченика,
+      xs:date( '2021-09-01' ),
+      xs:date( current-date() )
+    )    
+  
   let $result := 
-    <div>
-      <p>Журнал успеваемости ученика: { $имяУченика }</p>
-      <p>Текущие оценки за четверть</p>
+   <div>   
+
+   <h6>Оценки за текущий учебный год: { $фиоУченика }, { $номерКлассаУченика  } класс</h6>     
+   <div>
       <table  class = "table table-striped table-bordered">
         <tr class="text-center"> 
            <th>Предмет</th>
@@ -59,7 +88,7 @@ declare function uchenik.ocenki:main( $data, $номерЛичногоДела, 
         </tr>
         {
           for $i in $оценкиПоПредметам[ position() >= 2 ]
-          let $оценки := $i?2?2[ number( . ) >0 ]
+          let $оценки := $i?2?2[ number( . ) > 0 ]
           let $количествоПропусков := count( $i?2[ ?2 = 'н' ] )
           
           let $оценкиЗаКонтрольные := 
@@ -131,55 +160,10 @@ declare function uchenik.ocenki:main( $data, $номерЛичногоДела, 
             </tr>
         }
       </table>
-      
-   <p><center>Оценки за четверть и год</center></p>
-   <table class = "table table-striped table-bordered">
-     <tr>
-           <th width="20%">Предмет</th>
-           <th width="10%">Четверть I</th>
-           <th width="10%">Четверть II</th>
-           <th width="10%">Четверть III</th>
-           <th width="10%">Четверть IV</th>
-           <th width="10%">Год</th>
-        </tr>
-     {
-      for $p in $оценкиПромежуточнойАттестации
-      return 
-         <tr> 
-           <td> { $p?1 } </td>
-           <td> { $p?2[ 1 ] } </td>
-           <td> { $p?2[ 2 ] } </td>
-           <td> { $p?2[ 3 ] } </td>
-           <td> { $p?2[ 4 ] } </td>
-           <td> { $p?2[ 5 ] } </td>
-         </tr>
-      }
-    </table>
-   
-   <p><center>Техника чтения</center></p>
-   <table class = "table table-striped table-bordered">
-     <tr>
-           <th width="20%">Предмет</th>
-           <th width="10%">Четверть I</th>
-           <th width="10%">Четверть II</th>
-           <th width="10%">Четверть III</th>
-           <th width="10%">Четверть IV</th>
-           <th width="10%">Год</th>
-        </tr>
-     {
-      for $p in $оценкиПромежуточнойАттестации
-      return 
-         <tr> 
-           <td> { $p?1 } </td>
-           <td> { $p?2[ 1 ] } </td>
-           <td> { $p?2[ 2 ] } </td>
-           <td> { $p?2[ 3 ] } </td>
-           <td> { $p?2[ 4 ] } </td>
-           <td> { $p?2[ 5 ] } </td>
-         </tr>
-      }
-    </table>
+    </div>
     </div>
   return
     $result
 };
+  
+ 

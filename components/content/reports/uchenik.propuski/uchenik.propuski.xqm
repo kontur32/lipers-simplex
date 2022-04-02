@@ -17,7 +17,13 @@ declare function uchenik.propuski:main( $params ){
   let $началоПериода := 
     if(request:parameter('началоПериода'))
     then(request:parameter('началоПериода'))
-    else(format-date(current-date(), "[Y0001]-[M01]-[D01]"))
+    else(       
+        if (fn:month-from-date(current-date() ) = (06, 07, 08, 09, 10, 11, 12))
+        then (fn:year-from-date(current-date()) || '-09-01')
+        else fn:year-from-date(current-date() ) - 1 || '-09-01'
+        )
+        
+  
   let $конецПериода := 
     if(request:parameter('конецПериода'))
     then(request:parameter('конецПериода'))
