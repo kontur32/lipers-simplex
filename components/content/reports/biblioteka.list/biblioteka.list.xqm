@@ -16,7 +16,7 @@ function
      'Biblioteka/lipersBooks.xlsx' , (: путь к файлу внутри хранилища :)
      '.',
      'http://81.177.136.43:9984/zapolnititul/api/v2/forms/b3d871a0-bea6-4459-b7fb-9480fef40e6a/fields' (: адрес (URL) для доступа к схеме - по этому адресу можно пройти :),
-     map{'page':'5;6;7'},
+     map{'page':'5;6'},
      $params?_config('store.yandex.personalData.local') (: идентификатор хранилища :)
   )//table
 };
