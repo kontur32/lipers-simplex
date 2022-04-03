@@ -34,13 +34,22 @@ declare function mainMenu:main( $params as map(*) ){
        let $items2 := 
           (            
             [ 'Список сотрудников', 'teachers.spisok' ],
-			[ 'Возраст и стажи', 'teachers.kadr'],
+            [ 'Возраст и стажи', 'teachers.kadr'],
             [ 'Дни рождения сотрудников', 'teachers.list' ],
             [ 'Справки на печать', 'teachers.docs-print']
             
           )
         return
-           [ $items2, 't', 'Кадры' ]
+           [ $items2, 't', 'Кадры' ]           
+    case 'student'
+      return
+        let $items := 
+          (
+            [ 'Техника чтения', 'uchenik.tehChten' ]
+          )
+        return
+          [ $items, 's', 'Техника чтения' ]     
+           
     default
       return
         [ ( [ '', '' ] ), '', '' ]
@@ -51,7 +60,8 @@ declare function mainMenu:main( $params as map(*) ){
     case 'teacher'
       return
         let $items3 := 
-          (
+          (            
+            [ 'Текущие оценки', 'uchenik.journal' ],
             [ 'Журнал пропусков', 'ucheniki.propuski' ],
             [ 'Оценки за четверть', 'uchenik.konduit' ],
             [ 'Литкоины', 'uchenik.litkoinAll' ]
