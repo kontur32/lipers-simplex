@@ -25,7 +25,7 @@ function docs:main($path as xs:string, $schema as xs:string){
   let $rdf :=  
      http:send-request (
         $request,
-       'http://localhost:'||request:port()||'/garpix/semantik/app/app/api/v0.1/transfom/trci-rdf'
+       'http://a.roz37.ru:9984/garpix/semantik/app/app/api/v0.1/transfom/trci-rdf'
       )[ 2 ]/child::*
   let $graphName := 'http://lipers.ru/lipers-simplex/' || $path
   let $storeURL := 'http://81.177.136.214:3030/gs/upload'
