@@ -199,7 +199,8 @@ function funct:getFile($fileName, $xq, $storeID){
    web:create-url(
      $config:param( "api.method.getData" ) || 'stores/' ||  $storeID,
      map{
-       'access_token' : session:get( 'access_token' ),
+       'access_token' : session:get('access_token'),
+       'nocache' : '1',
        'path' : $fileName,
        'xq' : $xq
      }
