@@ -8,6 +8,15 @@ declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
 
 declare function  biblioteka.list:main( $params ){
+  let $файлДанных := 'Biblioteka/lipersBooks04.xlsx'
+  let $ссылкаДляОбновления :=
+    web:create-url(
+      'http://81.177.136.43:9984/lipers-simplex/api/v01/transfom/trci-rdf',
+      map{
+        'path' : $файлДанных,
+        'schema' : 'http://a.roz37.ru:9984/garpix/semantik/app/api/v0.1/schema/generate/Учебники в наличии'
+      }
+    )
   let $классы :=
     for $i in (1 to 10)
     return
@@ -19,7 +28,7 @@ declare function  biblioteka.list:main( $params ){
       map{
         'rp' : 'http://a.roz37.ru/lipers/запросы/учебники-по-классам',
         'класс' : $класс,
-        'файл' : 'Biblioteka/lipersBooks04.xlsx'
+        'файл' : $файлДанных
       }
     )
   let $книгиПоКлассу := fetch:xml($url)
@@ -27,7 +36,8 @@ declare function  biblioteka.list:main( $params ){
     map{
       'списокВсехКниг' : $книгиПоКлассу,
       'класс' : $класс,
-      'классы' : $классы
+      'классы' : $классы,
+      'ссылкаДляОбновления' : <a href="{$ссылкаДляОбновления}">(ссылка для обновления)</a>
     }
 };
 
