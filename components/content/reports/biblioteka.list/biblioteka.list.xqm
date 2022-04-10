@@ -7,6 +7,30 @@ import module namespace functx = "http://www.functx.com";
 declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
 
+declare function  biblioteka.list:main( $params ){
+  let $классы :=
+    for $i in (1 to 10)
+    return
+      <a href="{'?класс=' || $i}">{$i} класс</a>
+  let $класс := request:parameter('класс') ?? request:parameter('класс') !! '4'
+  let $url :=
+    web:create-url(
+      'http://a.roz37.ru:9984/garpix/semantik/app/request/execute',
+      map{
+        'rp' : 'http://a.roz37.ru/lipers/запросы/учебники-по-классам',
+        'класс' : $класс,
+        'файл' : 'Biblioteka/lipersBooks04.xlsx'
+      }
+    )
+  let $книгиПоКлассу := fetch:xml($url)
+  return
+    map{
+      'списокВсехКниг' : $книгиПоКлассу,
+      'класс' : $класс,
+      'классы' : $классы
+    }
+};
+
 declare
   %private
 function
@@ -21,7 +45,7 @@ function
   )//table
 };
 
-declare function  biblioteka.list:main( $params ){
+declare function  biblioteka.list:main1( $params ){
         
     let $data := biblioteka.list:списокВсехКниг ( $params )
         
