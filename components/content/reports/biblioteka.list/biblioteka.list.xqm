@@ -18,7 +18,7 @@ declare function  biblioteka.list:main( $params ){
       }
     )
   let $классы :=
-    for $i in (1 to 10)
+    for $i in (1 to 11)
     return
       <a href="{'?класс=' || $i}">{$i} класс</a>
   let $класс := request:parameter('класс') ?? request:parameter('класс') !! '4'
