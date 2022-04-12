@@ -28,11 +28,11 @@ function docs:main($path as xs:string, $schema as xs:string){
        'http://a.roz37.ru:9984/garpix/semantik/app/app/api/v0.1/transfom/trci-rdf'
       )[ 2 ]/child::*
   let $graphName := 'http://lipers.ru/lipers-simplex/' || $path
-  let $storeURL := 'http://81.177.136.214:3030/gs/upload'
+  let $hostStore := 'http://81.177.136.214:3030'
   return
     (
-      docs:deleteGraph($graphName, $storeURL),
-      docs:uploadGraph($rdf, $graphName, $storeURL)
+      docs:deleteGraph($graphName, $hostStore || "/gs/update"),
+      docs:uploadGraph($rdf, $graphName, $hostStore || "/gs/upload")
     ) 
     
 };
@@ -65,7 +65,7 @@ function docs:uploadGraph(
 };
 
 declare
-  %private
+  %public
 function docs:deleteGraph(
   $graphName as xs:string,
   $storeURL as xs:string
@@ -76,14 +76,14 @@ function docs:deleteGraph(
     web:create-url(
       $storeURL,
       map{
-        'query':$request
+        'update':$request
       }
     )
   return
     http:send-request(
       <http:request method='POST'>
-        <http:header name="Content-Type" value= 'multipart/form-data; boundary=----7MA4YWxkTrZu0gW'/>
+        <http:header name="Content-Type" value= 'application/x-www-form-urlencoded'/>
       </http:request>,
       $url
-    )[1]/@status/data()  
+    )[1]/@status/data()   
 };
