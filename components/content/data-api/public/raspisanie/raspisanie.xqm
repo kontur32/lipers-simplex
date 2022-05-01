@@ -47,11 +47,12 @@ declare function raspisanie:расписание($params){
       let $уроки :=
         for $i in $r//tr[position()>1]/td[position()=(1+$деньНедели)]
         count $c
+        where  $i/text()
         return
-          'Урок ' || $c || ': ' || $i/text() || '; '
+          'Урок ' || $c || ': ' || $i/text()
       return
         <result>
-          <уроки>{string-join($уроки, ' ')}</уроки>
+          <уроки>{string-join($уроки, ';&#10;')}</уроки>
         </result>
    )
    else($расписаниеПолное)
