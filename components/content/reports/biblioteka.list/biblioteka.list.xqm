@@ -11,7 +11,7 @@ declare function  biblioteka.list:main( $params ){
   let $файлДанных := 'Biblioteka/lipersBooks04.xlsx'
   let $ссылкаДляОбновления :=
     web:create-url(
-      'http://81.177.136.43:9984/lipers-simplex/api/v01/transfom/trci-rdf',
+      'http://a.roz37.ru:9984/lipers-simplex/api/v01/transfom/trci-rdf',
       map{
         'path' : $файлДанных,
         'schema' : 'http://a.roz37.ru:9984/garpix/semantik/app/api/v0.1/schema/generate/Учебники в наличии'
@@ -37,7 +37,8 @@ declare function  biblioteka.list:main( $params ){
       'списокВсехКниг' : $книгиПоКлассу,
       'класс' : $класс,
       'классы' : $классы,
-      'ссылкаДляОбновления' : <a href="{$ссылкаДляОбновления}">(ссылка для обновления)</a>
+      'ссылкаДляОбновления' : 
+        <a href="{$ссылкаДляОбновления}">(ссылка для обновления)</a>
     }
 };
 

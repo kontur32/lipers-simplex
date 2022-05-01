@@ -64,8 +64,8 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Текущие оценки', 'uchenik.journal' ],
             [ 'Журнал пропусков', 'ucheniki.propuski' ],
             [ 'Оценки за четверть', 'uchenik.konduit' ],
-            [ 'Литкоины', 'uchenik.litkoinAll' ]
-
+            [ 'Литкоины', 'uchenik.litkoinAll' ],
+            ['Расписание', 'uchenik.raspisanie']
           )
         return
            [ $items3, 't', 'ОКО' ]

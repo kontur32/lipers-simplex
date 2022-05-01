@@ -2,6 +2,7 @@ module namespace funct = "funct";
 
 import module namespace getData = "getData" at "getData.xqm";
 import module namespace config = "app/config" at "../functions/config.xqm";
+import module namespace login = "login" at '../api/login.xqm';
 
 declare function funct:log( $fileName, $data, $params ) {
   switch ( $params?mode )
@@ -195,11 +196,14 @@ function funct:getFile($fileName, $xq, $storeID, $access_token){
 declare
   %public
 function funct:getFile($fileName, $xq, $storeID){
+ let $access_token :=
+   session:get('access_token')??session:get('access_token')!!
+   login:getToken($config:param('authHost'), $config:param('login'), $config:param('password'))
  let $href := 
    web:create-url(
      $config:param( "api.method.getData" ) || 'stores/' ||  $storeID,
      map{
-       'access_token' : session:get('access_token'),
+       'access_token' : $access_token,
        'nocache' : '1',
        'path' : $fileName,
        'xq' : $xq

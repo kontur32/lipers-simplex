@@ -136,6 +136,10 @@ declare function reports:main( $params ){
    case "uchenik.journal"
       return
         $params?_tpl( 'content/reports/uchenik.journal', map{} )
+   
+   case "uchenik.raspisanie"
+      return
+        $params?_tpl( 'content/reports/uchenik.raspisanie', map{} )
         
    default
       return
