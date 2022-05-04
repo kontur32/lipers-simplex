@@ -2,7 +2,7 @@ module namespace content = 'content/teacher';
 
 declare function content:main( $params ){
   let $кодАвторизации := 
-    replace(string(session:id()), '[A-Za-z]', '')
+    substring(replace(session:id(), '[A-Za-z]', ''), 1, 5)
   let $login := session:get('login')
   return
     map{

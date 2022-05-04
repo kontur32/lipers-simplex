@@ -13,5 +13,5 @@ declare function sessions_:main($params){
 };
 
 declare function sessions_:nonce($string){
-  replace(string($string), '[A-Za-z]', '')
+  substring(replace($string, '[A-Za-z]', ''), 1, 5)
 };
