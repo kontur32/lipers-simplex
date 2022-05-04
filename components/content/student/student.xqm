@@ -13,6 +13,8 @@ declare function content:main( $params ){
   
   return
     map{
-      'содержание' : $result
+      'содержание':$result,
+      'login':session:get('login'),
+      'кодАвторизации':substring(replace(session:id(), '[A-Za-z]', ''), 1, 5)
     }
 };
