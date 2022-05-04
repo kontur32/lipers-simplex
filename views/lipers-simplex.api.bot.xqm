@@ -17,7 +17,10 @@ function bot:main($метод as xs:string, $callback){
           let $result :=
             funct:tpl('content/data-api/public/' || $метод, $query-params)
           return
-            fetch:text(bot:build-url($callback, $result, $query-params))
+            (
+              bot:build-url($callback, $result, $query-params),
+              fetch:text(bot:build-url($callback, $result, $query-params))
+            )   
         }
         catch*{
           <err:BOT02>не удалось отправить запрос по адресу {$callback}</err:BOT02>
