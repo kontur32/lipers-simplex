@@ -5,7 +5,7 @@ declare function sessions_:main($params){
       'данные' :
         <lipersID>{
            for $i in sessions:ids()
-           where sessions_:nonce($i) = request:parameter('nonce')
+           where sessions_:nonce($i) = $params?nonce
            return
              sessions:get($i, 'login')
         }</lipersID>

@@ -18,6 +18,7 @@ function bot:main($метод as xs:string, $callback){
             funct:tpl('content/data-api/public/' || $метод, $query-params)
           return
             (
+              $result,
               bot:build-url($callback, $result, $query-params),
               fetch:text(bot:build-url($callback, $result, $query-params))
             )   
