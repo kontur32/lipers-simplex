@@ -9,17 +9,22 @@ declare function userData:main($params){
        '.',
        $params?_config('store.yandex.personalData')
      )
+  let $учитель := 
+    $data//row[
+      cell[@label="Логин"]=request:parameter('lipersID') or
+      cell[@label="Электронная почта"]=request:parameter('lipersID')
+    ]
   return
-      map{
-        'данные' : 
-        <датаРождения>{
-          $data//row[
-            cell[@label="Логин"]=request:parameter('lipersID') or
-            cell[@label="Электронная почта"]=request:parameter('lipersID')
-          ]
+    map{
+      'датаРождения' : 
+      <датаРождения>{
+         $учитель 
         /cell[@label="Дата рождения (чч.мм.гггг)"]/dateTime:dateParse(text())
-        }</датаРождения>
-        
-      }
+      }</датаРождения>,
+      'номерЛичногоДела' : 
+      <номерЛичногоДела>{
+        $учитель/cell[@label="номер личного дела"]/text()
+      }</номерЛичногоДела>
+    }
    
 };
