@@ -11,9 +11,11 @@ import module namespace lipersRasp = 'http://lipers.ru/modules/расписан�
   at 'https://raw.githubusercontent.com/kontur32/lipers-Zeitplan/master/modules/lipers-module-lipersRasp.xqm';
 
 declare function raspisanieTeachers:main($params){
-  map{
-    'данные' : <расписание>{raspisanieTeachers:расписание($params)}</расписание>
-  }
+  let $расписание := raspisanieTeachers:расписание($params)
+  return
+    map{
+      'данные' : <расписание>{ $расписание ?? $расписание !! 'Занятий нет'}</расписание>
+    }
 };
 
 declare function raspisanieTeachers:расписание($params){
