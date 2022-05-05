@@ -13,7 +13,10 @@ declare function userData:main($params){
       map{
         'данные' : 
         <датаРождения>{
-          $data//row[cell[@label="Логин"]=request:parameter('lipersID')]
+          $data//row[
+            cell[@label="Логин"]=request:parameter('lipersID') or
+            cell[@label="Электронная почта"]=request:parameter('lipersID')
+          ]
         /cell[@label="Дата рождения (чч.мм.гггг)"]/dateTime:dateParse(text())
         }</датаРождения>
         
