@@ -17,18 +17,6 @@ declare function raspisanieTeachers:main($params){
 };
 
 declare function raspisanieTeachers:расписание($params){
-  let $учителя := 
-    $params?_getFileStore(
-       'авторизация/lipersTeachers.xlsx',
-       '.',
-       $params?_config('store.yandex.personalData')
-     )
-  let $номерЛичногоДела := 
-    $учителя//row[
-        cell[@label="Логин"]=request:parameter('lipersID') or
-        cell[@label="Электронная почта"]=request:parameter('lipersID')
-      ]
-    /cell[@label="номер личного дела"]/text()
   let $data := 
     $params?_getFileStore(
        'Расписание/Текущее/rs.xlsx',
@@ -45,10 +33,10 @@ declare function raspisanieTeachers:расписание($params){
          'признаки' : $списокПризнаков/row/cell[ @label = 'Признак' ]/text()
        }
      )
-  let $lipersID := request:parameter('lipersID')
+  let $номерЛичногоДела := request:parameter('номерЛичногоДела')
   let $деньНедели := request:parameter('деньНедели')
   let $учебныеЗанятияУчителя :=
-      $расписаниеДанные//с:учитель[@*:id = $lipersID]
+      $расписаниеДанные//с:учитель[@*:id = $номерЛичногоДела]
       //с:учебноеЗанятие[п:деньНеделиНомер = $деньНедели]
   return
     for $i in $учебныеЗанятияУчителя
