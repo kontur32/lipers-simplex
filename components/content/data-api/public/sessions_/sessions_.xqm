@@ -1,14 +1,13 @@
 module namespace sessions_ = 'content/data-api/public/sessions_';
 
-declare function sessions_:main($params){
+declare function sessions_:main($params){    
+  let $sessionID := sessions:ids()[sessions_:nonce(.) = $params?nonce]
+  let $login := sessions:get($sessionID, 'login')
+  let $grants := sessions:get($sessionID, 'grants')
+  return    
     map{
-      'данные' :
-        <lipersID>{
-           for $i in sessions:ids()
-           where sessions_:nonce($i) = $params?nonce
-           return
-             sessions:get($i, 'login')
-        }</lipersID>
+      'lipersID' : <lipersID>{$login}</lipersID>,
+      'grants' : <grants>{$grants}</grants>
     }
 };
 
