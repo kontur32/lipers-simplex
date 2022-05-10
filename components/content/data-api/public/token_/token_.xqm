@@ -9,7 +9,7 @@ declare function token_:main($params){
   let $encrypStr := token_:enrypt($params?string)
   let $url :=
     web:create-url(
-      'http://' || request:hostname()|| ':' || request:port() ||'/lipers-simplex/p/api/v01/session_',
+      'http://' || request:hostname()|| ':' || request:port() ||'/lipers-simplex/p/session_',
       map{
         'token':$encrypStr
       }
