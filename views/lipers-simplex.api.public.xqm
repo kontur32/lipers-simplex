@@ -5,7 +5,7 @@ import module namespace funct="funct" at "../functions/functions.xqm";
 declare 
   %rest:GET
   %rest:path("/lipers-simplex/p/api/v01/{$метод}")
-  %output:method( "xml" )
+  %output:method("xml")
 function lipers-simplex:main( $метод as xs:string ){
   let $query-params :=
     for $i in request:parameter-names()

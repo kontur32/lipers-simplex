@@ -1,5 +1,11 @@
 module namespace sessions_ = 'content/data-api/public/sessions_';
 
+(:
+  Возвращает данные пользователя по иднетификатору сессии
+  @param $params?nonce индентификатор сессии, переданные пользователем
+  @return параметры сессии пользователя login и garnts
+
+:)
 declare function sessions_:main($params){ 
   let $nonce := replace($params?nonce, '\s', '')
   let $result :=    
