@@ -10,14 +10,8 @@ declare
 function inkwi:main(){
   let $params :=    
      map{
-        'content' :   
-    (  
-    funct:tpl( 'start', map{} )
-    
-  )
-
-,
-        'footer' : funct:tpl( 'footer', map{} )
+        'content' : funct:tpl('start', map{}),
+        'footer' : funct:tpl('footer', map{})
       }
   return
     funct:tpl( 'main', $params )

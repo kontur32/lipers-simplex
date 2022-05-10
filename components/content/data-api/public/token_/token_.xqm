@@ -1,10 +1,9 @@
 module namespace token_ = 'content/data-api/public/token_';
 
 (:
-  Возвращает данные пользователя по иднетификатору сессии
-  @param $params?nonce индентификатор сессии, переданные пользователем
-  @return параметры сессии пользователя login и garnts
-
+  Обратимо кодидирует произвольрную строку с 8-битным ключом алгоримом DES
+  @param $params?string строка для кодирования
+  @return закодированная строка в формате Base64
 :)
 declare function token_:main($params){ 
   let $encrypStr := token_:enrypt($params?string)

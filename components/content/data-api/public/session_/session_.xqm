@@ -4,8 +4,8 @@ module namespace session_ = 'content/data-api/public/session_';
   Устанавливает сессиию и возвращает идентификатор сессии
   @param $params?token зашифрованные параметры сессии пользователя
   @return код сессии для авторизации пользователя
-
 :)
+
 declare function session_:main($params){ 
   let $sessionNonce := session_:nonce(session:id())
   let $decrypStr := session_:derypt($params?token)
@@ -17,7 +17,7 @@ declare function session_:main($params){
     )
   let $result :=    
       map{
-        'nonce' : <кодАвторизации>{$sessionNonce}</кодАвторизации>,
+        'nonce' : <div>{$sessionNonce}</div>,
         'sessionData':
           <sessionData>
             <login>{session:get('login')}</login>
