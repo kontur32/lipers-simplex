@@ -74,9 +74,41 @@ declare function uchitel:main( $params ){
             <cell id='http://lipers.ru/схема/приказОтрудоустройстве'>{
               $учитель/lip:приказОтрудоустройстве/text()
             }</cell>
-			<cell id='http://lipers.ru/схема/трудоустройствоОО'> {format-date(xs:date($учитель/lip:трудоустройствоОО/text()),
-                "[D01].[M01].[Y0001]") }</cell>
-            </row>       
+           <cell id='http://lipers.ru/схема/трудоустройствоОО'> {format-date(xs:date($учитель/lip:трудоустройствоОО/text()), "[D01].[M01].[Y0001]") }</cell>
+            <cell id='http://lipers.ru/схема/номерТК'>{
+              $учитель/lip:номерТК/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/штат'>{
+              $учитель/lip:штат/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/оклад'>{
+              $учитель/lip:оклад/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/окладПрописью'>{
+              $учитель/lip:окладПрописью/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/количествоЧасов'>{
+              $учитель/lip:количествоЧасов/text()
+            }</cell> 
+            <cell id='http://lipers.ru/схема/ставка'>{
+              $учитель/lip:ставка/text()              
+            }</cell>
+            <cell id='http://lipers.ru/схема/паспортВыдан'>{
+              $учитель/lip:паспортВыдан/text()
+            }</cell>                                  
+            <cell id='http://lipers.ru/схема/подразделениеУФМС'>{
+              $учитель/lip:подразделениеУФМС/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/прописка'>{
+              $учитель/lip:прописка/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/инициалы'>{
+              $учитель/lip:инициалы/text()
+            }</cell>
+            <cell id='http://lipers.ru/схема/СНИЛС'>{
+              $учитель/lip:СНИЛС/text()
+            }</cell>
+            </row>
          </table>
   return
     map{'данные' : $данные }
