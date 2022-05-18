@@ -19,6 +19,12 @@ declare function teachers.docs-print:main( $params ){
           '/lipers-simplex/api/v01/generator/docs/spravkaPodtverOO',
           map{'id':$i/@id}
         )
+      
+      let $href2 :=
+        web:create-url(
+          '/lipers-simplex/api/v01/generator/docs/trudDogov',
+          map{'id':$i/@id}
+        )
        
       order by $фио
       count $c
@@ -41,6 +47,7 @@ declare function teachers.docs-print:main( $params ){
            <td>{$фио}</td>
            <td>Стаж в Лицее {dateTime:transform-PYMD-1(xs:duration($yearLipers)) }</td>
            <td><a class="btn btn-primary" href="{$href}">Справка-подтверждение</a></td>
+           <td><a class="btn btn-primary" href="{$href2}">Трудовой договор</a></td>
          </tr>
   
     let $всегоСотрудников := count($сотрудникиТекущие)
