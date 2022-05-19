@@ -26,11 +26,11 @@ declare function uchenik.litkoinAll:main( $params ){
     map{
       'началоПериода' : format-date(xs:date( normalize-space($началоПериода) ), "[Y]-[M01]-[D01]"),
       'конецПериода' : format-date(xs:date( normalize-space($конецПериода ) ), "[Y]-[M01]-[D01]"),
-      'литкоин' : <div>{ uchenik.litkoinAll:карточкиУчеников( $data, $началоПериода, $конецПериода )}</div>
+      'литкоин' : <div>{ uchenik.litkoinAll:карточкиУчеников( $data, $params, $началоПериода, $конецПериода )}</div>
     }
 };
 
-declare function uchenik.litkoinAll:карточкиУчеников( $data, $началоПериода, $конецПериода ){  
+declare function uchenik.litkoinAll:карточкиУчеников($data, $params, $началоПериода, $конецПериода){  
   for $ученик in stud:ученики( $data//table[ row[ 1 ]/cell/text() ] )
   let $номерЛичногоДела := $ученик?1
   let $имяУченика := $ученик?2
@@ -55,12 +55,13 @@ declare function uchenik.litkoinAll:карточкиУчеников( $data, $н
         'fio' : $имяУченика
       }
     )
-  let $QRlink := uchenik.litkoinAll:QRlink($hrefLitkoin)
+  let $QRlink :=
+    $params?_tpl('content/data-api/qrGernerate', map{'string': $hrefLitkoin})//result
   
   let $result := 
     <div>
       <p>Журнал успеваемости ученика: { $имяУченика }</p>
-      <p><a href="{$QRlink}">личный кабинет</a></p>
+      <p><a href="{$hrefLitkoin}">личный кабинет</a></p>
       <p><img src="{$QRlink}"/></p>
       <p>Подсчет литкоинов</p>
       <table  class = "table table-striped table-bordered">
@@ -79,45 +80,23 @@ declare function uchenik.litkoinAll:карточкиУчеников( $data, $н
             <tr>
               <td>{ $i?1}</td>
               <td class="text-center">{ string-join( $i?2?2, ', ' ) } { if( $количествоПропусков )then( ' (пропусков: ' || $количествоПропусков || ')' ) }</td>
-              <td class="text-center">{ round( avg( $оценки ), 1 ) }</td>                
-           
+              <td class="text-center">{ round( avg( $оценки ), 1 ) }</td>              
            </tr>
   }
        
-      {   
-      
+ {   
       let $i := $оценкиПоПредметам[ position() >= 2 ]
       let $литкоины := ((count( $i?2[ ?2 = '5' ] ) * 3) + (count( $i?2[ ?2 = '4' ] ) * 2)) - (count( $i?2[ ?2 = '2' ] ))
       let $штраф := (count( $i?2[ ?2 = '2' ] ))
-      return
-      
-      <tr>
-           <th><font size="5" color="blue" face="Arial"><center>Всего литкоинов:</center></font></th>
-           <td><center> штрафы за {$штраф} двойки(ек): <span><font size="3" color="red" face="Arial">  минус {$штраф} балла(ов) </font></span> </center></td>
-           <td><font size="5" color="blue" face="Arial"><b><center> {$литкоины} </center></b></font></td>
-           </tr>                
-        }
-      
+      return      
+        <tr>
+          <th><font size="5" color="blue" face="Arial"><center>Всего литкоинов:</center></font></th>
+          <td><center> штрафы за {$штраф} двойки(ек): <span><font size="3" color="red" face="Arial">  минус {$штраф} балла(ов) </font></span> </center></td>
+          <td><font size="5" color="blue" face="Arial"><b><center> {$литкоины} </center></b></font></td>
+         </tr>                
+  }
       </table>
-      
      </div>
   return
     $result
-};
-
-declare
-  %private
-function uchenik.litkoinAll:QRlink($url){
-  let $shortLink := fetch:text('https://clck.ru/--?url=' || web:encode-url( $url ))
-  return  
-    web:create-url(
-      'https://chart.googleapis.com/chart',
-      map{
-        'cht': 'qr',
-        'chs' : '200x200',
-        'choe' : 'UTF-8',
-        'chld' : 'H',
-        'chl' : $shortLink            
-      }
-    )
 };

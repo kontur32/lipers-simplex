@@ -2,7 +2,9 @@ module namespace uchitel = 'content/data-api/uchitel';
 
 declare namespace sch = 'http://schema.org';
 declare namespace lip = 'http://lipers.ru/схема';
-
+(:
+  возвращает данные об учителе по id
+:)
 declare function uchitel:main( $params ){
   let $учитель :=
     $params?_tpl( 'content/data-api/spisokUchitel', $params )
