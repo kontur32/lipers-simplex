@@ -23,7 +23,7 @@ declare function teachers.list:main($params){
       )
     return
       map{
-        'списокУчителей':teachers.list:учителяПоМесяцам($работающиеУчителя),
+        'списокУчителей':teachers.list:учителяПоМесяцам($работающиеУчителя, $params),
         'ссылкаНаИсходныйРезультат':$href,
         'текущийГод':year-from-date(current-date()),
         'текущаяДата':$текущаяДата,
@@ -33,26 +33,44 @@ declare function teachers.list:main($params){
 
 declare
   %private
-function teachers.list:учителяПоМесяцам($работающиеУчителя){
+function teachers.list:учителяПоМесяцам($работающиеУчителя, $params){
   let $месяцы :=
     ('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь')
-  for $i in $работающиеУчителя
-  let $месяц := month-from-date($i/sch:birthDate/text())      
+  for $учителяПоМесяцу in $работающиеУчителя
+  let $месяц := month-from-date($учителяПоМесяцу/sch:birthDate/text())      
   order by $месяц
   group by $месяц    
   return
-     <li>{$месяцы[$месяц]}<ul>{teachers.list:учителяПоМесяца($i)}</ul></li>
+     <li>{$месяцы[$месяц]}
+       <ul>{teachers.list:учителяПоМесяцу($учителяПоМесяцу, $params)}</ul>
+     </li>
 };
 
 declare
   %private
-function teachers.list:учителяПоМесяца($учителяПоМесяца){
-  for $ii in $учителяПоМесяца
-  let $день := day-from-date($ii/sch:birthDate/text())
-  order by $день
-  let $id := $ii/@id/data()
+function teachers.list:учителяПоМесяцу($учителяПоМесяцу, $params){
+  for $учитель in $учителяПоМесяцу
+  let $день := day-from-date($учитель/sch:birthDate/text())
+  order by $день  
+  let $tokenUrl :=
+    let $userLogin := $учитель/lip:логин/text()
+    where $userLogin
+    let $url :=
+      fetch:xml(
+        web:create-url(
+          'http://81.177.136.43:9984/lipers-simplex/p/api/v01/token_',
+          map{
+            'string':
+              replace('{"login":"%1","grants":"teacher"}', '%1', $userLogin)
+          }
+        )
+      )//url/text()
+    let $QRlink :=
+      $params?_tpl('content/data-api/qrGernerate', map{'string': $url})//result
+    return
+      <span>для бота: <a href="{$url}">ссылка</a>, <a href="{$QRlink}">QR-code</a></span>
   return
-    <li>{teachers.list:записьУчителя($ii)}</li>
+    <li>{teachers.list:записьУчителя($учитель)}{$tokenUrl}</li>
 };
 
 declare
