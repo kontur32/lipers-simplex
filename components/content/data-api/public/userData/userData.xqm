@@ -13,7 +13,7 @@ declare function userData:main($params){
     $data//row[
       cell[@label="Логин"]=request:parameter('lipersID') or
       cell[@label="Электронная почта"]=request:parameter('lipersID')
-    ]
+    ][not(cell[@label="Дата увольнения из лицея"]/text())]
   return
     map{
       'датаРождения' : 
