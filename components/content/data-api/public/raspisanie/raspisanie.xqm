@@ -19,10 +19,12 @@ declare function raspisanie:расписание($params){
        '.',
        $params?_config('store.yandex.personalData')
      )
-  
-  let $paramsLocal := map{'класс':lower-case(replace($params?класс, '\s', ''))}
+  let $нормализованныйКласс := lower-case(replace($params?класс, '\s', ''))
+  let $paramsLocal := map{'класс':$нормализованныйКласс}
   let $списокПризнаков := $data//table[ @label = 'Признаки' ]
   let $словарьПредметов := $data//table[ @label = 'Кодификатор предметов' ]  
+  let $списокКлассов :=
+    $data//table[@label = 'Классы']/row/cell[@label='Класс']/text() 
   
   let $расписаниеДанные := 
     model:расписание(
@@ -51,9 +53,18 @@ declare function raspisanie:расписание($params){
         return
           'Урок ' || $c || ': ' || $i/text()
       return
-        <result>
-          <уроки>{string-join($уроки, ';&#10;')}</уроки>
-        </result>
+        if($нормализованныйКласс=$списокКлассов)
+        then(
+          <result>
+            <уроки>{string-join($уроки, ';&#10;')}</уроки>
+          </result>
+        )
+        else(
+          <result>
+            <классы>При запросе расписания введите класс из списка: {string-join($списокКлассов, ', ')}</классы>
+          </result>
+        )
+        
    )
    else($расписаниеПолное)
 };
