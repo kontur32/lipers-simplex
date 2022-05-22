@@ -20,7 +20,7 @@ declare function raspisanie:расписание($params){
        $params?_config('store.yandex.personalData')
      )
   
-  let $paramsLocal := map{'класс':$params?класс}
+  let $paramsLocal := map{'класс':lower-case(replace($params?класс, '\s', ''))}
   let $списокПризнаков := $data//table[ @label = 'Признаки' ]
   let $словарьПредметов := $data//table[ @label = 'Кодификатор предметов' ]  
   
