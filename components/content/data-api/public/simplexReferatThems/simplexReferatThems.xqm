@@ -21,7 +21,7 @@ declare function simplexReferatThems:тема($предмет){
             }
           )
          return
-           fetch:xml($url)
+           fetch:xml($url)//реферат/child::*
       }
     </result>
 };
