@@ -1,7 +1,9 @@
 module namespace bot = "/lipers-simplex/bot/api/v01/";
 
 import module namespace funct="funct" at "../functions/functions.xqm";
-
+(:
+  отправляет результат выполнения компонента по адресу, указанному в callback
+:)
 declare 
   %rest:GET
   %rest:path("/lipers-simplex/bot/api/v01/{$метод}")
