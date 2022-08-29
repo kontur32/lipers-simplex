@@ -1,16 +1,23 @@
 module namespace spisokUchenikovClass = 'content/data-api/public/spisokUchenikovClass';
 
+import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
+
 declare function spisokUchenikovClass:main($params){
   let $всеУченики := spisokUchenikovClass:списокВсехУчеников($params)
   let $ученикиКласса := 
-    for $i in $всеУченики/row[cell[@label="Класс"]=$params?класс]
+    for $i in $всеУченики/row[not(cell[@label="дата выбытия из ОО"]/text())][cell[@label="Класс"]=$params?класс]
     return
-      $i/cell[@label="Фамилия,"] || ' ' || $i/cell[@label="имя,"]
+     <ul>
+       <li>
+       {$i/cell[@label="Фамилия,"] || ' ' || $i/cell[@label="имя,"] || '. Поступил(а): ' ||format-date(xs:date(dateTime:dateParse( $i/cell[@label="дата поступления в ОО"]/text() )), "[D01].[M01].[Y0001]")}
+       </li>
+     </ul>
+      
   return
     map{'данные' :
     <result>
       <класс>{$params?класс}</класс>
-      <списокКласса>{string-join($ученикиКласса, ", ")}</списокКласса>
+      <списокКласса>{$ученикиКласса, ", "}</списокКласса>
     </result>}
 };
 
