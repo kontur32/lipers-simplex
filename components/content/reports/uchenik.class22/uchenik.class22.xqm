@@ -1,9 +1,6 @@
 module namespace uchenik.class22 = 'content/reports/uchenik.class22';
 
 declare function  uchenik.class22:main($params){
-   
-  let $реестрКлассов := 
-    ('0','1','2','3','4','5','6','7','8','9','10','11')
   let $реестрКлассов :=
     $params?_tpl( 'content/data-api/public/spisokClassov', $params)
     //классы/table/row/cell/text()
