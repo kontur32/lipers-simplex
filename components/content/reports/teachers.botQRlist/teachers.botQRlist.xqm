@@ -40,7 +40,7 @@ function teachers.botQRlist:учителяПоМесяцу($учителяПоМ
     $params?_tpl('content/data-api/public/token_', map{'string': $userString})//url/text()
   let $QRlink :=
     $params?_tpl('content/data-api/qrGernerate', map{'string': $url})//result/text()
-
+  let $QRlink := teachers.botQRlist:qrImageHref($url)
   return
     <tr>
       <td>{$фио}</td>
