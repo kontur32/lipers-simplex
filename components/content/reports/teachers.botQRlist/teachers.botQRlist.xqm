@@ -39,7 +39,8 @@ function teachers.botQRlist:учителяПоМесяцу($учителяПоМ
   let $url :=
     $params?_tpl('content/data-api/public/token_', map{'string': $userString})//url/text()
   let $QRlink :=
-    $params?_tpl('content/data-api/qrGernerate', map{'string': $url})//result
+    $params?_tpl('content/data-api/qrGernerate', map{'string': $url})//result/text()
+
   return
     <tr>
       <td>{$фио}</td>
@@ -56,4 +57,23 @@ function teachers.botQRlist:записьУчителя($записьУчител
     ' '||$записьУчителя/lip:отчество
   return
     $фио
+};
+
+declare
+  %private
+function
+  teachers.botQRlist:qrImageHref($string as xs:string) 
+{
+  let $shortLink := fetch:text('https://clck.ru/--?url=' || web:encode-url( $string ))
+  return  
+    web:create-url(
+      'https://chart.googleapis.com/chart',
+      map{
+        'cht': 'qr',
+        'chs' : '200x200',
+        'choe' : 'UTF-8',
+        'chld' : 'H',
+        'chl' : $shortLink            
+      }
+    )
 };
