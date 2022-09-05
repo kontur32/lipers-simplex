@@ -7,21 +7,21 @@ declare
 function token:getAccessToken() as xs:string*
 {
   token:getToken(
-    config:param( 'authHost' ),
-    config:param( 'login' ),
-    config:param( 'password' )
+    config:param('authHost'),
+    config:param('login'),
+    config:param('password')
   )
 };
 
 declare
   %public
-function token:getToken( $username, $password ) as xs:string*
+function token:getToken($username, $password) as xs:string*
 {
-  token:getToken( config:param( 'authHost' ), $username, $password )
+  token:getToken(config:param('authHost'), $username, $password)
 };
 
 declare
-  %private
+  %public
 function token:getToken( $host, $username, $password ) as xs:string*
 {
   let $request := 
@@ -40,9 +40,7 @@ function token:getToken( $host, $username, $password ) as xs:string*
         $host || "/wp-json/jwt-auth/v1/token"
     )
     return
-      if ( $response[ 1 ]/@status/data() = "200" )
-      then(
-        $response[ 2 ]//token/text()
-      )
-      else( )
+      if($response[1]/@status/data()="200")
+      then($response[2]//token/text())
+      else()
 };

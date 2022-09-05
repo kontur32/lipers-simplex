@@ -5,6 +5,21 @@ import module namespace funct="funct" at "../functions/functions.xqm";
 
 declare 
   %rest:GET
+  %rest:query-param("path","{$path}")
+  %rest:path("/lipers-simplex/api/v01/upload/rdf")
+  %output:method('text')
+  %private
+function docs:upload($path as xs:string){
+  let $hostStore := 'http://81.177.136.214:3030'
+  return
+    (
+      docs:deleteGraph($path, $hostStore || "/gs/update"),
+      docs:uploadGraph(fetch:xml($path)/child::*, $path, $hostStore || "/gs/upload") 
+    ) 
+};
+
+declare 
+  %rest:GET
   %rest:query-param("path","{$path}", 'Biblioteka/lipersBooks.xlsx')
   %rest:query-param("schema","{$schema}", 'http://localhost:9984/garpix/semantik/app/api/v0.1/schema/generate/Учебники в наличии')
   %rest:path("/lipers-simplex/api/v01/transfom/trci-rdf")
@@ -32,13 +47,13 @@ function docs:main($path as xs:string, $schema as xs:string){
   return
     (
       docs:deleteGraph($graphName, $hostStore || "/gs/update"),
-      docs:uploadGraph($rdf, $graphName, $hostStore || "/gs/upload")
+      docs:uploadGraph($rdf, $graphName, $hostStore || "/gs/upload") 
     ) 
     
 };
 
 declare
-  %private
+  %public
 function docs:uploadGraph(
   $rdf as element(),
   $graphName as xs:string,
@@ -59,9 +74,9 @@ function docs:uploadGraph(
      http:send-request (
         $request,
         $storeURL
-      )
+      )[1]/@status/data()
   return
-     $response[1]/@status/data()  
+     $response 
 };
 
 declare
