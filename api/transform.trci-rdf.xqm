@@ -5,16 +5,20 @@ import module namespace funct="funct" at "../functions/functions.xqm";
 
 declare 
   %rest:GET
-  %rest:query-param("path","{$path}")
+  %rest:query-param("source","{$sourcePath}")
   %rest:path("/lipers-simplex/api/v01/upload/rdf")
   %output:method('text')
   %private
-function docs:upload($path as xs:string){
+function docs:upload($sourcePath as xs:string){
   let $hostStore := 'http://81.177.136.214:3030'
   return
     (
-      docs:deleteGraph($path, $hostStore || "/gs/update"),
-      docs:uploadGraph(fetch:xml($path)/child::*, $path, $hostStore || "/gs/upload") 
+      docs:deleteGraph($sourcePath, $hostStore || "/gs/update"),
+      docs:uploadGraph(
+        fetch:xml($sourcePath)/child::*, 
+          $sourcePath,
+          $hostStore || "/gs/upload"
+      ) 
     ) 
 };
 
