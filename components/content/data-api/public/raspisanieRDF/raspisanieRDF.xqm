@@ -8,7 +8,7 @@ declare function raspisanieRDF:main($params){
      $params?_tpl('content/data-api/public/raspisanieRaw', $params)
   let $путь := $data/file/@label/data()
   let $имяФайла := substring-before(tokenize($путь, "/")[last()], ".")
-  let $номерУчебнойНедели := xs:integer(tokenize($имяФайла, "-")[2])
+  let $номерУчебнойНедели := try{xs:integer(tokenize($имяФайла, "-")[2])}catch*{2}
   let $номерКалендарнойНедели := $номерУчебнойНедели + 34
   let $год := xs:integer(tokenize($имяФайла, "-")[1])
   let $учебныйГод :=
