@@ -4,7 +4,7 @@ import module namespace model = 'http://lipers.ru/modules/модельДанны
   at 'https://raw.githubusercontent.com/kontur32/lipers-Zeitplan/master/modules/dataModel.xqm';
 
 declare function raspisanieRaw:main($params){
-  let $путь := 'Расписание/2022-2023 Расписание недельное/2022-текущее.xlsx'
+  let $путь := 'Расписание/2022-2023 Расписание недельное/2022-02.xlsx'
   let $data := raspisanieRaw:расписание($params, $путь)
   return
     map{'данные' : $data}
