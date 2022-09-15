@@ -1,6 +1,7 @@
 module namespace login = "login";
 
 import module namespace config = "app/config" at '../functions/config.xqm';
+import module namespace funct = "funct" at '../functions/functions.xqm';
 
 declare 
   %rest:GET
@@ -19,17 +20,14 @@ function login:main( $login as xs:string, $password as xs:string ){
       )
     )/user
   
-  let $студент := 
-    fetch:xml(
-      web:create-url(
-        'http://iro37.ru:9984/zapolnititul/api/v2.1/data/publication/6ff0f8d0-8cab-4f18-bf31-a5a1ad61829b',
-        map{
+  let $студент :=
+    funct:tpl(
+      'content/data-api/public/api_auth_kids',
+      map{
           'login' : $login,
           'password' : $password
         }
-      )
-    )/user
-  
+      )/user
   let $роль := 
     if( $преподаватель != "" )
     then(
