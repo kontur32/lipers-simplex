@@ -4,7 +4,7 @@ import module namespace dateTime = 'dateTime'
   at 'http://iro37.ru/res/repo/dateTime.xqm';
 
 declare function teachers-26:main($params){
-  let $путь := 'SSM/26-school/Teachers.xlsx'
+  let $путь := '/Учителя.xlsx'
   let $data := teachers-26:расписание($params, $путь)
   return
     map{'данные' : teachers-26:таблица($data)}
@@ -13,7 +13,7 @@ declare function teachers-26:main($params){
 declare function teachers-26:таблица($data) as element(tr)*{
   let $категории :=
     (['В','высшая'], ['1','первая'],['С','сответствие занимаемой должности'],['МС','молодой специалист'], ['Н','нет'])
-  for $i in $data/table/row
+  for $i in $data/table[@label="Учителя"]/row
   order by $i/cell[@label="ФИО"]/text()
   order by $i/cell[@label="Сортировка"]/xs:integer(text())
   count $c
@@ -41,6 +41,6 @@ function
   $params?_getFileStore(
      $путь, 
      '.', 
-     $params?_config('store.yandex.personalData')
+     $params?_config('store.yandex.school26')
   )/file
 };
