@@ -23,12 +23,16 @@ declare function teachers-26:таблица($data) as element(tr)*{
    <tr>
      <td>{$c}</td>
      <td>{$i/cell[@label="ФИО"]/text()}</td>
-     <td>{$i/cell[@label="Образование"]/text()}</td>
-     <td>{$i/cell[@label="Специальность по диплому"][1]/text()}</td>
      <td>{$i/cell[@label="Должность"]/text()}</td>
-     <td>{$i/cell[@label="Стаж в должности"]/text()}</td>
-     <td>{$категория}</td>
+     <td>{$i/cell[@label="Образование"]/text()}</td>
+     <td>{string-join($i/cell[@label="Название образовательного учреждения"]/text(), ', ')}</td>
+     <td>{string-join($i/cell[@label="Специальность по диплому"]/text(), ', ')}</td>
+     <td>{$i/cell[@label="Ученая степень"]/text()}</td>
+     <td>{$i/cell[@label="Ученое звание"]/text()}</td>
      <td>{format-date(dateTime:dateParse($i/cell[@label="Дата КПК"]/text()), "[Y0001]")}</td>
+     <td>{$i/cell[@label="Общий стаж"]/text()}</td>
+     <td>{$i/cell[@label="Стаж в должности"]/text()}</td>    
+     <td>{$категория}</td>
      <td>{$i/cell[@label="Предметы"]/text()}</td>
  </tr> 
 };
