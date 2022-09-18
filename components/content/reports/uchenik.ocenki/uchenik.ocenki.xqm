@@ -58,7 +58,7 @@ declare function uchenik.ocenki:main( $data, $номерЛичногоДела, 
            <th>Средний балл за контрольные</th>
         </tr>
         {
-          for $i in $оценкиПоПредметам[ position() >= 2 ]
+          for $i in $оценкиПоПредметам
           let $оценки := $i?2?2[ number( . ) >0 ]
           let $количествоПропусков := count( $i?2[ ?2 = 'н' ] )
           
