@@ -1,0 +1,27 @@
+<body>
+  <table style = "width : 50%">
+    <tr>
+      <td >
+        <img width = '100px' src = "http://school26.ivedu.ru/images/stories/k_prazdnikam/gerb_school.gif"></img>
+      </td>
+      <td>
+        <h1>Расчет количества замещенных уроков по МБОУ СШ № 26 г. Иваново</h1>
+      </td>
+    </tr>
+  </table>
+  <div>
+    <form action="#">
+      <label>C <input type="date" name="from" value="{$fromDate}"/></label>
+      <label> по <input type="date" name="to" value="{$toDate}"/></label>  
+      <input type="submit"/>
+    </form>
+  </div>
+  <div> 
+    <h2>По классам</h2>
+    <div>{{поКлассам}}</div>
+  </div>
+  <div>
+    <h2>По подгруппам</h2>
+    <div>{{поПодгруппам}}</div>
+  </div>
+</body>
