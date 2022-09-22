@@ -11,8 +11,9 @@
   </table>
   <div>
     <form action="#">
-      <label>C <input type="date" name="from" value="{$fromDate}"/></label>
-      <label> по <input type="date" name="to" value="{$toDate}"/></label>  
+      <label>C <input type="date" name="from" value="{{from}}"/></label>
+      <label> по <input type="date" name="to" value="{{to}}"/></label>  
+      <input type="text" name="output" value="text/html" hidden="yes"/> 
       <input type="submit"/>
     </form>
   </div>

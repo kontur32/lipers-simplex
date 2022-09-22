@@ -11,17 +11,20 @@ declare function zameshen-26:main($params){
       'На основании приказа № 246-к от 24.09.2020г. среднее количество учащихся в классе – 26 человек',
       'На основании приказа № 246-к от 24.09.2020г. средняя наполняемость группы – 13 человек'
     )
-  let $params :=
+  let $dates :=
     map{
-      'from':'2022-09-01',
-      'to':'2022-09-23'
+      'from':if($params?from)then($params?from)else('2020-09-01'),
+      'to':if($params?to)then($params?to)else('2020-09-10')
     }
   let $fromDate:= 
       if($params?from)then($params?from)else('2020-09-01')
   let $toDate:= 
     if($params?to)then($params?to)else('2020-09-10')
   return
-   zameshen-26:table($d, $fromDate, $toDate, $text)
+    map:merge((
+      $dates,
+      zameshen-26:table($d, $dates?from, $dates?to, $text)
+    ))
 };
 
 declare
@@ -35,7 +38,7 @@ function
 
 declare function zameshen-26:data($data){ 
   for $i in $data
-  let $t := $i/cell[@labe ='Учитель_замещение']/text()
+  let $t := $i/cell[@label ='Учитель_замещение']/text()
   order by $t
   group by $t
   where $t
@@ -45,18 +48,21 @@ declare function zameshen-26:data($data){
       let $z := $ii/cell[@label='Учитель']/text()
       order by $z
       group by $z
+      count $c1
       return 
         <ii z = '{$z}'>{
           for $iii in $ii
            let $p := $iii/cell[@label = 'Предмет_замещение']/text()
            order by $p
            group by $p
+           count $c2
            return 
               <iii p = '{$p}'>{
                 for $iiii in $iii
                 let $cl := $iiii/cell[ @label = 'Класс' ]/text()
                  order by $cl
                  group by $cl
+                 count $c3
                  let $классов := distinct-values($iii/cell[@label='Класс']/text())
                  return
                    <tr>
@@ -68,7 +74,7 @@ declare function zameshen-26:data($data){
     }</i>
 };
 
-declare function zameshen-26:table( $data, $params ){
+declare function zameshen-26:table($data, $params){
   <table border = '1px' style = "width : 50%" bgcolor="#FFFFFF" bordercolor="#000000" cellspacing="0" cellpadding="0">
     <tr style = "text-align: center; font-weight: bold;">
       <td>№ пп</td>
@@ -141,15 +147,14 @@ declare function zameshen-26:table($d, $fromDate, $toDate, $text){
     $d//table[1]/row
       [cell[@label='Дата']/dateTime:dateParse(./text()) >= xs:date($fromDate)]
       [cell[@label='Дата']/dateTime:dateParse(./text()) <= xs:date($toDate)]
-  let $предметыПодгруппами := 
-    ('технология', 'английский', 'информатика', 'основы компьютерной')
+  
   let $поКлассам := 
-      $data[cell[@label='Предмет']/text() contains text ftnot {$предметыПодгруппами}]
+      $data[cell[@label='Предмет']/text() contains text ftnot {'технология', 'английский', 'информатика', 'основы компьютерной'}]
   let $поПодгруппам := 
-    $data[cell[@label='Предмет']/text() contains text {$предметыПодгруппами}] 
+    $data[cell[@label='Предмет']/text() contains text {'технология', 'английский', 'информатика', 'основы компьютерной'}] 
 return
   map{
-    'поКлассам':zameshen-26:table(zameshen-26:data($поКлассам), map{'text':$text[1]}),
+    'поКлассам': zameshen-26:table(zameshen-26:data($поКлассам), map{'text':$text[1]}),
     'поПодгруппам':zameshen-26:table(zameshen-26:data($поПодгруппам), map{'text':$text[2]})
   }
 };
