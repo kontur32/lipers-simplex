@@ -9,16 +9,15 @@ declare
   %rest:query-param( "password", "{ $password }" )
   %rest:path( "/lipers-simplex/api/v01/login" )
 function login:main( $login as xs:string, $password as xs:string ){
-  let $преподаватель := 
-    fetch:xml(
-      web:create-url(
-        'http://iro37.ru:9984/zapolnititul/api/v2.1/data/publication/406bbf6e-51ac-466b-8615-bf8ec3655401',
-        map{
+  
+  let $преподаватель :=
+    funct:tpl(
+      'content/data-api/public/api_auth_teachers',
+      map{
           'login' : $login,
           'password' : $password
         }
-      )
-    )/user
+      )//user
   
   let $студент :=
     funct:tpl(
@@ -27,9 +26,10 @@ function login:main( $login as xs:string, $password as xs:string ){
           'login' : $login,
           'password' : $password
         }
-      )/user
+      )//user
+  
   let $роль := 
-    if( $преподаватель != "" )
+    if( $преподаватель/номерЛичногоДела/text() != "" )
     then(
       map{
         'label' : $преподаватель/ФИО/text(),
@@ -40,7 +40,7 @@ function login:main( $login as xs:string, $password as xs:string ){
       }
     )
     else(
-      if( $студент/ФИО/text() != "" )
+      if( $студент/номерЛичногоДела/text() != "" )
       then(
         map{
           'label' : $студент/ФИО/text(),
