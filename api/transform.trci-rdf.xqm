@@ -3,6 +3,9 @@ module namespace docs = "lipers-simplex/student/docs";
 import module namespace config = "app/config" at '../functions/config.xqm';
 import module namespace funct="funct" at "../functions/functions.xqm";
 
+(:
+  заргужает RDF-ресурс в хранилище
+:)
 declare 
   %rest:GET
   %rest:query-param("source","{$sourcePath}")
@@ -22,6 +25,9 @@ function docs:upload($sourcePath as xs:string){
     ) 
 };
 
+(:
+  загружает xlsx-файл в RDF-хранилище, используя схему
+:)
 declare 
   %rest:GET
   %rest:query-param("path","{$path}", 'Biblioteka/lipersBooks.xlsx')
