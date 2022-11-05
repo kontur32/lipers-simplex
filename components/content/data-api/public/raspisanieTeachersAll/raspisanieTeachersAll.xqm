@@ -6,12 +6,15 @@ declare function raspisanieTeachers:main($params){
   
   let $меню := 
     for $i in raspisanieTeachers:списокВсехУчителей($params)/row [(cell[@label="активППС"]/text())]
-    order by $i 
+    order by $i
+    let $номерЛичногоДела := $i/cell[@label='номер личного дела']/text()
   return
    ( 
    <table>
-   <td align="center">
-   <a href="?номерЛичногоДела={$i/cell[@label = 'номер личного дела']}&amp;деньНедели={request:parameter('деньНедели')}">{$i/cell[1]}</a></td></table>
+     <td align="center">
+        <a href="?номерЛичногоДела={$номерЛичногоДела}">{$i/cell[1]}</a>
+     </td>
+   </table>
     )
   return
     map{
