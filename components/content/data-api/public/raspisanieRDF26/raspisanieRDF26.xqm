@@ -1,0 +1,39 @@
+module namespace raspisanieRDF26 = 'content/data-api/public/raspisanieRDF26';
+
+import module namespace model = 'http://lipers.ru/modules/модельДанных'
+  at 'https://raw.githubusercontent.com/kontur32/lipers-Zeitplan/master/modules/dataModel.xqm';
+
+declare function raspisanieRDF26:main($params){
+  let $data := 
+     $params?_tpl('content/data-api/public/raspisanieRaw26', $params)
+  let $путь := $data/file/@label/data()
+  let $имяФайла := substring-before(tokenize($путь, "/")[last()], ".")
+  let $номерУчебнойНедели := try{xs:integer(tokenize($имяФайла, "-")[2])}catch*{2}
+  let $номерКалендарнойНедели := $номерУчебнойНедели + 34
+  let $год := xs:integer(tokenize($имяФайла, "-")[1])
+  let $учебныйГод :=
+    if(current-date()>=xs:date($год || '-09-01'))
+    then($год || '/' || $год + 1)
+    else($год - 1 || '/' || $год)
+  
+  let $расписаниеУчителей := 
+    $data//table[@label = 'Расписание учителей']
+  let $списокПолейЗаписиРасписания := 
+    $data//table[@label='Признаки']/row/cell[@label='Признак']/text()
+   
+  let $расписаниеПоМодели :=
+    model:расписание(
+         $расписаниеУчителей,
+         map{'признаки' : $списокПолейЗаписиРасписания}
+       )
+  let $rdf := 
+    model:расписаниеRDF(
+      $расписаниеПоМодели, 
+      $год, 
+      $номерКалендарнойНедели, 
+      $учебныйГод, 
+      $номерУчебнойНедели
+    )
+  return
+    map{'данные' : $rdf}
+};
