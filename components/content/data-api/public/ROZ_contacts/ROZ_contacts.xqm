@@ -1,6 +1,6 @@
-module namespace botSpisokClassov = 'content/data-api/public/ROZ_contacts';
+module namespace ROZ_contacts = 'content/data-api/public/ROZ_contacts';
 
-declare function botSpisokClassov:main($params){
+declare function ROZ_contacts:main($params){
   
   let $data :=
     csv:parse(
@@ -9,10 +9,15 @@ declare function botSpisokClassov:main($params){
       ),
       map{'header':'yes'}
     )//record
+    let $user := $data[region/text()=request:parameter('region')]
+      
     return
       map{'данные' :
         <result>
-          {$data[region/text()=request:parameter('region')]/child::*}
+          <lastname>{$user/lastname/text()}</lastname>
+          <firstname>{$user/firstname/text()}</firstname>
+          <telegram_username>{$user/telegram_username/text()}</telegram_username>
+          <telegram_id>{$user/telegram_id/text()}</telegram_id>
         </result>
       }
 };
