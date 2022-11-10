@@ -17,7 +17,7 @@ declare function ROZ_contacts:main($params){
           <lastname>{$user/lastname/text()??$user/lastname/text()!!'нет'}</lastname>
           <firstname>{$user/firstname/text()??$user/firstname/text()!!'нет'}</firstname>
           <telegram_username>{$user/telegram_username/text()??$user/telegram_username/text()!!'нет'}</telegram_username>
-          <telegram_id>{$user/telegram_id/text()??$user/telegram_id/text()!!'нет'}</telegram_id>
+          <telegram_id>{$user/telegram_id/text()??$user/telegram_id/text()!!'контакт скрыт'}</telegram_id>
         </result>
       }
 };
