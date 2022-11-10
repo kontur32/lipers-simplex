@@ -14,10 +14,10 @@ declare function ROZ_contacts:main($params){
     return
       map{'данные' :
         <result>
-          <lastname>{$user/lastname/text()??$user/lastname/text()!!'нет'}</lastname>
-          <firstname>{$user/firstname/text()??$user/firstname/text()!!'нет'}</firstname>
-          <telegram_username>{$user/telegram_username/text()??$user/telegram_username/text()!!'контакт скрыт'}</telegram_username>
-          <telegram_id>{$user/telegram_id/text()}</telegram_id>
+          <lastname>{$user/lastname/text()??string-join($user/lastname/text(), ', ')!!'нет'}</lastname>
+          <firstname>{$user/firstname/text()??string-join($user/firstname/text(), ', ')!!'нет'}</firstname>
+          <telegram_username>{$user/telegram_username/text()??string-join($user/telegram_username/text(), ', ')!!'контакт скрыт'}</telegram_username>
+          <telegram_id>{$user[1]/telegram_id/text()}</telegram_id>
         </result>
       }
 };
