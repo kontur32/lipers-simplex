@@ -11,10 +11,12 @@ declare function ROZ_contacts-list:main($params){
     )//record
     let $users :=
       for $i in $data[region/text()]
-      order by $i/region/text()
+      let $region := $i/region/text()
+      order by $region
+      group by $region
       let $hasUsername := if($i/telegram_username/text())then('(@)')else()
       return
-        $i/region/text() || $hasUsername
+        $region || $hasUsername
     return
       map{'данные' :
         <result>
