@@ -18,10 +18,10 @@ declare function ROZ_contacts-list:main($params){
     return
       map{'данные' :
         <result>
-          <count>{count($users)}</count>
+          <count_regions>{count(distinct-values($data/region/text()))}</count_regions>
+          <count_contacts>{count($data/region/text())}</count_contacts>
           <regions>{
-            string-join($users, ';&#10;') || ';&#10;' || 
-            '<a href="tg://user?id=426274250">inline mention of a user</a>'
+            string-join($users, ';&#10;')
           }</regions>
         </result>
       }
