@@ -18,12 +18,12 @@ declare function raspisanie:расписаниеRDF($params){
             "класс":$нормализованныйКласс
           }
         )
-      )//table[1]/tr[position()>1]/td[1+$деньНедели]/text()
+      )//table[1]/tr[position()>1]/td[1+$деньНедели]
      let $уроки := 
        for $i in $data
        count $c
        return
-         $c || ') ' || $i
+         $c || ') ' || $i/text()
      return
         <result>
           <уроки>{string-join($уроки, ';&#10;')}</уроки>
