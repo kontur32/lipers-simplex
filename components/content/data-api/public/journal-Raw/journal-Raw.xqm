@@ -4,6 +4,7 @@ declare function journal-Raw:main($params){
   let $путь := 'raspisanie'
   let $учителя := 
     journal-Raw:списокУчителей($params)//cell[@label="Файл журнала"][text()]/text()
+  
   let $data := journal-Raw:расписание($params, $путь, $учителя)
   return
     map{'данные' : <journal label="{$путь}">{$data}</journal>}
@@ -12,16 +13,18 @@ declare function journal-Raw:main($params){
 declare
   %private
 function
-  journal-Raw:расписание($params, $путь, $учителя) as element(file)*
+  journal-Raw:расписание($params, $путь, $учителя) 
 {
    for $i in $учителя
-   let $путь := string-join(($путь, $i),"/")
+   let $path := string-join(($путь, $i),"/")
    return
-     $params?_getFileStore(
-       $путь, 
+   try{
+    $params?_getFileStore(
+       $path, 
        '.', 
        $params?_config('store.yandex.jornal')
-    )/child::* update insert node attribute {"label"}{$путь} into .
+    )/child::* update insert node attribute {"label"}{$path} into .
+  }catch*{}
 };
 
 declare
