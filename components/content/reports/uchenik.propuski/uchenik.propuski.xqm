@@ -23,7 +23,7 @@ declare function uchenik.propuski:пропуски($data, $период){
      
   let $оценкиПромежуточнойАттестации := 
     stud:количествоПропусковПоПредметам(
-      $tables, $номерЛичногоДела, $период?началоПериода, $период?конецПериода
+      $tables, $номерЛичногоДела, xs:date($период?началоПериода), xs:date($период?конецПериода)
     )
   let $класс := tokenize($tables[1]/@label)[1]
   let $result := 
@@ -36,6 +36,7 @@ declare function uchenik.propuski:пропуски($data, $период){
        </tr>
        {
         for $p in $оценкиПромежуточнойАттестации
+        where $p?1
         return 
            <tr> 
              <td>{$p?1}</td>
