@@ -23,10 +23,15 @@ declare function uchenik.journal:main( $params ){
     then( xs:date( request:parameter( 'конецПериода' ) ) )
     else( current-date() ) 
   
+  (:
   let $data:=
     fetch:xml(
       'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
     )
+  :)
+  
+  let $data := doc($params?_config('path.cache') || 'journal-Raw.xml')/child::*
+
   let $ученики := uchenik.journal:списокВсехУчеников($params)
   let $текущий := (request:parameter(xs:string('класс')))
   return

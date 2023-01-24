@@ -7,7 +7,13 @@ declare function journal-Raw:main($params){
   
   let $data := journal-Raw:расписание($params, $путь, $учителя)
   return
-    map{'данные' : <journal label="{$путь}">{$data}</journal>}
+    (
+      map{'данные' : <journal label="{$путь}">{$data}</journal>},
+      file:write(
+        $params?_config('path.cache') || 'journal-Raw.xml',
+        <journal label="{$путь}">{$data}</journal>
+      )
+    )
 };
 
 declare
