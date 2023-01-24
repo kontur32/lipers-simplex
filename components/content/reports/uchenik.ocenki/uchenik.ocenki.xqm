@@ -2,26 +2,12 @@ module namespace uchenik.ocenki = 'content/reports/uchenik.ocenki';
 
 import module namespace stud = 'lipers/modules/student' 
   at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm';
-  
-import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
 
 declare function uchenik.ocenki:main( $params ){
-  
-  let $началоПериода :=
-    if( request:parameter( 'началоПериода' ) )
-    then( xs:date( request:parameter( 'началоПериода' ) ) )
-    else( current-date() ) 
-  
-  let $конецПериода :=
-    if( request:parameter( 'конецПериода' ) )
-    then( xs:date( request:parameter( 'конецПериода' ) ) )
-    else( current-date() ) 
-  
-  let $data:=
-    fetch:xml(
-      'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
-    )
-
+  let $период := uchenik.ocenki:период()
+  let $началоПериода := $период?началоПериода
+  let $конецПериода := $период?конецПериода
+  let $data := $params?_tpl('content/data-api/public/journal-Raw', $params)
   return
     map{
       'началоПериода' : format-date(xs:date( $началоПериода ), "[Y]-[M01]-[D01]"),
@@ -182,4 +168,25 @@ declare function uchenik.ocenki:main( $data, $номерЛичногоДела, 
     </div>
   return
     $result
+};
+
+
+declare function uchenik.ocenki:период(){
+  let $началоПериода := 
+    if(request:parameter('началоПериода'))
+    then(request:parameter('началоПериода'))
+    else(       
+        if (fn:month-from-date(current-date() ) = (06, 07, 08, 09, 10, 11, 12))
+        then (fn:year-from-date(current-date()) || '-09-01')
+        else fn:year-from-date(current-date() ) - 1 || '-09-01'
+        )
+  let $конецПериода := 
+    if(request:parameter('конецПериода'))
+    then(request:parameter('конецПериода'))
+    else(format-date(current-date(), "[Y0001]-[M01]-[D01]"))
+  return
+    map{
+      'началоПериода':$началоПериода,
+      'конецПериода':$конецПериода
+    }
 };
