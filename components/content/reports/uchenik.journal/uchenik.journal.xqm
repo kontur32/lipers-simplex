@@ -2,10 +2,6 @@ module namespace uchenik.journal = 'content/reports/uchenik.journal';
 
 import module namespace stud = 'lipers/modules/student' 
   at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm'; 
-import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
-
-declare namespace sch = 'http://schema.org';
-declare namespace lip = 'http://lipers.ru/схема';
 
 declare function uchenik.journal:main( $params ){  
   
@@ -30,7 +26,7 @@ declare function uchenik.journal:main( $params ){
     )
   :)
   
-  let $data := doc($params?_config('path.cache') || 'journal-Raw.xml')/child::*
+  let $data := $params?_tpl('content/data-api/public/journal-Raw', $params)
 
   let $ученики := uchenik.journal:списокВсехУчеников($params)
   let $текущий := (request:parameter(xs:string('класс')))
@@ -149,9 +145,7 @@ declare function uchenik.journal:main2($data, $текущийКласс, $уче
                          if(matches ($всеОценки?2, 'ч'))
                          then <font title="{format-date(xs:date($всеОценки?1), "[D01].[M01].[Y0001]")} Техника чтения | {substring-after($всеОценки?2, 'ч') } слов в минуту" size="3" color="blue" face="Arial">{substring-before($всеОценки?2, 'ч'), ','}</font>
                         else (<font title="{format-date(xs:date($всеОценки?1), "[D01].[M01].[Y0001]")}">{$всеОценки?2, ','}</font>)
-                               )
-                           
-                        
+                               )            
           
           let $оценкиДляСредней := ($оценки, $оценкиЗаКонтрольные, $оценкиЗаДомашние, $оценкиДвойныеПерваяОценка, $оценкиДвойныеВтораяОценка)
                     

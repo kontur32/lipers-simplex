@@ -1,23 +1,16 @@
 module namespace uchenik.konduit = 'content/reports/uchenik.konduit';
 
 import module namespace stud = 'lipers/modules/student' 
-  at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm'; 
-import module namespace dateTime = 'dateTime' at 'http://iro37.ru/res/repo/dateTime.xqm';
+  at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm';
 
-declare namespace sch = 'http://schema.org';
-declare namespace lip = 'http://lipers.ru/схема';
-
-declare function uchenik.konduit:main( $params ){  
+declare function uchenik.konduit:main($params){  
+  let $data := $params?_tpl('content/data-api/public/journal-Raw', $params)
   
-  let $data:=
-    fetch:xml(
-      'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
-    )
   let $ученики := uchenik.konduit:списокВсехУчеников($params)
   let $текущий := (request:parameter(xs:string('класс')))
   return
     map{
-       'оценкиЧетверть' : <div>{ uchenik.konduit:main2($data, $текущий, $ученики) }</div>,
+       'оценкиЧетверть' : <div>{uchenik.konduit:main2($data, $текущий, $ученики)}</div>,
        'классы' : for $i in (1 to 11) return <a href="{'?класс=' || $i}">{$i}</a>,
        'класс' : $текущий
     }
@@ -36,14 +29,11 @@ function
 };
 declare function uchenik.konduit:main2($data, $текущийКласс, $ученики ){   
   for $ученик in $ученики
-  
   let $номерЛичногоДелаУченика := 
-    substring-after($ученик/@id/data(), 'реестрУчеников')
-  
+    substring-after($ученик/@id/data(), 'реестрУчеников')  
   let $фиоУченика :=
     $ученик/*:familyName || ' ' ||  $ученик/*:givenName    
   order by $фиоУченика
-  
   let $номерКлассаУченика := xs:string($ученик/*:классБазаОО/text()) 
   where $номерКлассаУченика = $текущийКласс
   
@@ -56,37 +46,35 @@ declare function uchenik.konduit:main2($data, $текущийКласс, $уче
     stud:записиПоВсемПредметамЗаПериод(
       $оценкиУченика,
       $номерЛичногоДелаУченика,
-      xs:date( '2021-09-01' ),
-      xs:date( current-date() )
+      xs:date('2021-09-01'),
+      xs:date(current-date())
     )    
     
-  let $result := 
+  let $result :=   
    <div>   
-   <div>   
-   <h6>Оценки за текущий учебный год: { $фиоУченика }, {$номерКлассаУченика  } класс</h6>     
-   <table class = "table table-striped table-bordered">
-     <tr>
-           <th width="20%">Предмет</th>
-           <th width="10%">I четверть</th>
-           <th width="10%">II четверть</th>
-           <th width="10%">III четверть</th>
-           <th width="10%">IV четверть</th>
-           <th width="10%">Годовая оценка</th>
-      </tr>
-     {
-      for $p in $оценкиПромежуточнойАттестации
-      return 
-         <tr> 
-           <td> { $p?1 } </td>
-           <td> { $p?2[ 1 ] } </td>
-           <td> { $p?2[ 2 ] } </td>
-           <td> { $p?2[ 3 ] } </td>
-           <td> { $p?2[ 4 ] } </td>
-           <td> { $p?2[ 5 ] } </td>
-         </tr>
-      }
-    </table>
-    </div>
+     <h6>Оценки за текущий учебный год: {$фиоУченика}, {$номерКлассаУченика} класс</h6>
+     <table class = "table table-striped table-bordered">
+       <tr>
+         <th width="20%">Предмет</th>
+         <th width="10%">I четверть</th>
+         <th width="10%">II четверть</th>
+         <th width="10%">III четверть</th>
+         <th width="10%">IV четверть</th>
+         <th width="10%">Годовая оценка</th>
+        </tr>
+       {
+        for $p in $оценкиПромежуточнойАттестации
+        return 
+           <tr> 
+             <td> { $p?1 } </td>
+             <td> { $p?2[ 1 ] } </td>
+             <td> { $p?2[ 2 ] } </td>
+             <td> { $p?2[ 3 ] } </td>
+             <td> { $p?2[ 4 ] } </td>
+             <td> { $p?2[ 5 ] } </td>
+           </tr>
+        }
+      </table>
     </div>
   return
     $result

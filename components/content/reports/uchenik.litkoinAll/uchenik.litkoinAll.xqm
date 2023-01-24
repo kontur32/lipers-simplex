@@ -3,30 +3,16 @@ module namespace uchenik.litkoinAll = 'content/reports/uchenik.litkoinAll';
 import module namespace stud = 'lipers/modules/student' 
   at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm'; 
 
-declare namespace sch = 'http://schema.org';
-declare namespace lip = 'http://lipers.ru/схема';
-
 declare function uchenik.litkoinAll:main( $params ){
- 
-  let $началоПериода :=
-    if( request:parameter( 'началоПериода' ) )
-    then( ( request:parameter( 'началоПериода' ) ) )
-    else(('2022-01-31') ) 
-  
-  let $конецПериода :=
-    if( request:parameter( 'конецПериода' ) )
-    then(( request:parameter( 'конецПериода' ) ) )
-    else( ('2022-03-01') ) 
-  
-  let $data:=
-    fetch:xml(
-      'http://81.177.136.43:9984/zapolnititul/api/v2.1/data/publication/70ac0ae7-0f03-48cc-9962-860ef2832349'
-    )
+  let $период := uchenik.litkoinAll:период()
+  let $началоПериода := $период?началоПериода  
+  let $конецПериода := $период?конецПериода
+  let $data := $params?_tpl('content/data-api/public/journal-Raw', $params)
   return
     map{
-      'началоПериода' : format-date(xs:date( normalize-space($началоПериода) ), "[Y]-[M01]-[D01]"),
-      'конецПериода' : format-date(xs:date( normalize-space($конецПериода ) ), "[Y]-[M01]-[D01]"),
-      'литкоин' : <div>{ uchenik.litkoinAll:карточкиУчеников( $data, $params, $началоПериода, $конецПериода )}</div>
+      'началоПериода' : format-date(xs:date(normalize-space($началоПериода)), "[Y]-[M01]-[D01]"),
+      'конецПериода' : format-date(xs:date(normalize-space($конецПериода)), "[Y]-[M01]-[D01]"),
+      'литкоин' : <div>{uchenik.litkoinAll:карточкиУчеников($data, $params, $началоПериода, $конецПериода)}</div>
     }
 };
 
@@ -99,4 +85,24 @@ declare function uchenik.litkoinAll:карточкиУчеников($data, $par
      </div>
   return
     $result
+};
+
+declare function uchenik.litkoinAll:период(){
+  let $началоПериода := 
+    if(request:parameter('началоПериода'))
+    then(request:parameter('началоПериода'))
+    else(       
+        if (fn:month-from-date(current-date() ) = (06, 07, 08, 09, 10, 11, 12))
+        then (fn:year-from-date(current-date()) || '-09-01')
+        else fn:year-from-date(current-date() ) - 1 || '-09-01'
+        )
+  let $конецПериода := 
+    if(request:parameter('конецПериода'))
+    then(request:parameter('конецПериода'))
+    else(format-date(current-date(), "[Y0001]-[M01]-[D01]"))
+  return
+    map{
+      'началоПериода':$началоПериода,
+      'конецПериода':$конецПериода
+    }
 };

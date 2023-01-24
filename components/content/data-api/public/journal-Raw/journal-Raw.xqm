@@ -4,16 +4,21 @@ declare function journal-Raw:main($params){
   let $путь := 'raspisanie'
   let $учителя := 
     journal-Raw:списокУчителей($params)//cell[@label="Файл журнала"][text()]/text()
-  
-  let $data := journal-Raw:расписание($params, $путь, $учителя)
-  return
-    (
-      map{'данные' : <journal label="{$путь}">{$data}</journal>},
-      file:write(
-        $params?_config('path.cache') || 'journal-Raw.xml',
-        <journal label="{$путь}">{$data}</journal>
-      )
+  let $path.cache := $params?_config('path.cache') || 'journal-Raw.xml'
+  let $data := 
+    if(request:parameter('update')='yes')
+    then(
+      let $journal := 
+        <journal label="{$путь}" dateTime="{current-dateTime()}">{
+          journal-Raw:расписание($params, $путь, $учителя)
+        }</journal>      
+      return
+        ($journal, file:write($path.cache, $journal))
     )
+    else(doc($path.cache))
+  
+  return
+      map{'данные' : $data}
 };
 
 declare
