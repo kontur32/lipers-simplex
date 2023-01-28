@@ -19,14 +19,14 @@ declare function uchenik.ocenki:main( $params ){
 declare function uchenik.ocenki:main( $data, $номерЛичногоДела, $началоПериода, $конецПериода ){  
   let $tables := $data//table[ row[ 1 ]/cell/text() = $номерЛичногоДела ]
   let $имяУченика := 
-    ( $tables/row[ 1 ]/cell[ text() = $номерЛичногоДела ]/@label/data() )[ 1 ]
+    ($tables/row[ 1 ]/cell[ text() = $номерЛичногоДела ]/@label/data())[1]
     
   let $оценкиПоПредметам := 
     stud:записиПоВсемПредметамЗаПериод(
       $tables,
       $номерЛичногоДела,
-      xs:date( $началоПериода ),
-      xs:date( $конецПериода )
+      xs:date($началоПериода),
+      xs:date($конецПериода)
     )  
   
   let $оценкиПромежуточнойАттестации := 

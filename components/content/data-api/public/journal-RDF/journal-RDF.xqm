@@ -35,7 +35,7 @@ function journal-RDF:оценкиПоПредмету($data as element(table))
     $ученики[@label/data()=$оценкаУченика/@label/data()]/text()
   for $оценка in tokenize($оценкаУченика/text(), ",")
   return
-      <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:п="http://lipers.ru/схема/признаки/" xmlns:s="http://schema.org" rdf:about="{'http://lipers.ru/схема/сущности/отметкаВЖурнале#' || random:uuid()}">
+      <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:п="http://lipers.ru/схема/признаки/" xmlns:s="http://schema.org/" rdf:about="{'http://lipers.ru/схема/сущности/отметкаВЖурнале#' || random:uuid()}">
         <rdf:type rdf:resource="http://lipers.ru/схема/онтология/записьВЖурнале"/>
         <п:ученик rdf:resource="{'http://lipers.ru/схема/сущности/ученик#' || $идентификаторУченика}"/>
         <п:названиеПредмета>{$названиеПредмета}</п:названиеПредмета>
