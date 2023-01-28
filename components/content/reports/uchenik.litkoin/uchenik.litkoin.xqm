@@ -3,7 +3,7 @@ module namespace uchenik.litkoin = 'content/reports/uchenik.litkoin';
 import module namespace stud = 'lipers/modules/student' 
   at 'https://raw.githubusercontent.com/kontur32/lipers-zt/master/modules/stud.xqm';
  
-declare function uchenik.litkoin:main( $params ){
+declare function uchenik.litkoin:main($params){
   let $период := uchenik.litkoin:период()
   let $началоПериода := $период?началоПериода
   let $конецПериода := $период?конецПериода

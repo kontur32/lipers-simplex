@@ -2,6 +2,9 @@ module namespace journal-RDF = 'content/data-api/public/journal-RDF';
 
 import module namespace dateTime = 'dateTime'
   at 'http://iro37.ru/res/repo/dateTime.xqm';
+(:
+  генерирует RDF-запись журналов успеваемости из TRCI-записи
+:)
 
 declare function journal-RDF:main($params){
   let $data := 
