@@ -45,5 +45,6 @@ function journal-RDF:оценкиПоПредмету($data as element(table))
         <п:оценкаЗаУрок>{normalize-space($оценка)}</п:оценкаЗаУрок>
         <п:имяФайла>{$data/parent::*/@label/data()}</п:имяФайла>
         <п:класс>{$класс}</п:класс>
+        <п:файл>{$data/parent::*/@label/data()}</п:файл>
       </rdf:Description>
 };
