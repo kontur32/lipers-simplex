@@ -34,13 +34,31 @@ declare function ocenkiUchenikaTable:main($params){
        <td class="text-center">{
          ocenkiUchenikaTable:среднийБаллТекущихОценок($записиПоПредмету)
        }</td>
-       <td class="text-center"></td>
+       <td class="text-center">{
+         ocenkiUchenikaTable:среднийБаллОценокКонтрольные($записиПоПредмету)
+       }</td>
      </tr>
   return
     map{'строки' : $строки}
 };
 
 declare
+  %private
+function
+  ocenkiUchenikaTable:среднийБаллОценокКонтрольные($записиЖурнала){
+    let $всеОценки :=
+       for $записьЖурнала in $записиЖурнала
+       where matches($записьЖурнала/оценка/value/text(), 'к')
+       let $оценка := 
+         substring(replace($записьЖурнала/оценка/value/text(), '\D', ''), 1, 1)
+       where $оценка
+       return
+         xs:integer($оценка)
+     return
+       round(avg($всеОценки), 2)
+  };
+declare
+  %private
 function
   ocenkiUchenikaTable:среднийБаллТекущихОценок($записиЖурнала){
     let $всеОценки :=
