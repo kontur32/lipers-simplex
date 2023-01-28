@@ -8,7 +8,10 @@ declare function uchenik.journal:main($params){
   let $началоПериода := $период?началоПериода
   let $конецПериода := $период?конецПериода 
   let $ученики := uchenik.journal:списокВсехУчеников($params)
-  let $текущийКласс := request:parameter(xs:string('класс'))
+  let $текущийКласс := 
+    if(request:parameter(xs:string('класс')))
+    then(request:parameter(xs:string('класс')))
+    else('1')
   let $классыДляМеню := 
      for-each(1 to 11, function($i){<a href="{'?класс=' || $i}">{$i}</a>})
   let $оценкиВсехУчениковКласса :=
