@@ -31,5 +31,5 @@ function
        'авторизация/lipersTeachers.xlsx',
        './file/table[@label/data()="ППС"]',
        $params?_config('store.yandex.personalData')
-     )//table[@label="ППС"]
+     )/table
 };
