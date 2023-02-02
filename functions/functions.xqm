@@ -86,8 +86,10 @@ declare function funct:tpl( $app, $params ){
   let $config := function( $param ){ $config:param( $param ) }
   let $getFile :=
     function( $path,$xq ){ funct:getFile( $path, $xq ) }
+  
   let $getFileStore :=
-    function( $path,$xq, $storeID ){funct:getFile( $path, $xq, $storeID )}
+    function($path, $xq, $storeID){funct:getFile($path, $xq, $storeID)}
+  
   let $getFileRDF := function( $path, $xq, $schema, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $storeID ) }
   let $getFileRDFparams := function( $path, $xq, $schema, $params, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $params, $storeID ) }
   let $result :=
@@ -201,7 +203,7 @@ function funct:getFile($fileName, $xq, $storeID){
    login:getToken($config:param('authHost'), $config:param('login'), $config:param('password'))
  let $href := 
    web:create-url(
-     $config:param( "api.method.getData" ) || 'stores/' ||  $storeID,
+     $config:param("api.method.getData") || 'stores/' ||  $storeID,
      map{
        'access_token' : $access_token,
        'nocache' : '1',
