@@ -1,6 +1,7 @@
 module namespace funct = "funct";
 
 import module namespace getData = "getData" at "getData.xqm";
+import module namespace queryRDF = "queryRDF" at "queryRDF.xqm";
 import module namespace config = "app/config" at "../functions/config.xqm";
 import module namespace login = "login" at '../api/login.xqm';
 
@@ -91,18 +92,22 @@ declare function funct:tpl( $app, $params ){
     function($path, $xq, $storeID){funct:getFile($path, $xq, $storeID)}
   
   let $getFileRDF := function( $path, $xq, $schema, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $storeID ) }
-  let $getFileRDFparams := function( $path, $xq, $schema, $params, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $params, $storeID ) }
+  
+  let $queryRDF := function($q){queryRDF:get($q)}
+  
+  let $getFileRDFparams := function($path, $xq, $schema, $params, $storeID){funct:getFileRDF($path, $xq, $schema, $params, $storeID)}
+  
   let $result :=
     prof:track( 
       xquery:eval(
           $query, 
           map{ 'params':
             map:merge( 
-              ( $params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF, '_getFileRDFparams' : $getFileRDFparams } )
+              ($params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF, '_getFileRDFparams' : $getFileRDFparams, '_queryRDF': $queryRDF} )
             )
           }
         ),
-      map { 'time': true() }
+      map {'time': true()}
       )
 
   return

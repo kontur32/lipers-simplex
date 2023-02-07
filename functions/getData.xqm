@@ -22,6 +22,15 @@ declare function getData:getTemplateData( $templateID, $accessToken, $params as 
   )[2]
 };
 
+declare function getData:getToken()
+{
+  getData:getToken(
+    config:param('authHost'),
+    config:param('login'),
+    config:param('password')
+  )
+};
+
 declare function getData:getToken( $host, $username, $password )
 {
   let $request := 
