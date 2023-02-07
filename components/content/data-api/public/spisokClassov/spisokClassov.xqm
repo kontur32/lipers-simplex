@@ -19,7 +19,8 @@ function
       web:create-url(
         'http://a.roz37.ru:9984/garpix/semantik/app/request/execute',
         map{
-          'rp' : 'http://a.roz37.ru/lipers/запросы/реестр-классов'
+          'rp' : 'http://a.roz37.ru/lipers/запросы/реестр-классов',
+          'источник':'http://lipers.ru/lipers-simplex/Spravochniki/Reestr-classov.xlsx'
         }
       )
     )/child::*/класс
