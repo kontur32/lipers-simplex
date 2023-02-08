@@ -11,7 +11,7 @@ function queryRDF:get($query){
 
 
 declare
-  %private
+  %public
 function queryRDF:get($query, $output){
   queryRDF:get($query, $output, config:param('api.method.RDF') || "query/")
 };
@@ -21,9 +21,16 @@ declare
   %private
 function queryRDF:get($query, $output, $path){
   let $token := 
-    if(session:get('userID'))
-    then(session:get('userID'))
-    else(getToken:getAccessToken())
+    if(session:get('access_token'))
+    then(session:get('access_token'))
+    else(
+      let $t := getToken:getAccessToken()
+      return
+        (
+          session:set('access_token', $t),
+          $t
+        )
+    )
     
   let $request := 
     <http:request method='GET'>

@@ -1,7 +1,10 @@
 module namespace funct = "funct";
 
 import module namespace getData = "getData" at "getData.xqm";
+import module namespace getToken = "funct/token/getToken" at "tokens.xqm";
 import module namespace queryRDF = "queryRDF" at "queryRDF.xqm";
+import module namespace semantikQueryRDF = "semantikQueryRDF" 
+  at "semantikQueryRDF.xqm";
 import module namespace config = "app/config" at "../functions/config.xqm";
 import module namespace login = "login" at '../api/login.xqm';
 
@@ -93,7 +96,9 @@ declare function funct:tpl( $app, $params ){
   
   let $getFileRDF := function( $path, $xq, $schema, $storeID ){ funct:getFileRDF( $path, $xq, $schema, $storeID ) }
   
+  let $getTokenPayload := function(){getToken:getTokenPayload()}
   let $queryRDF := function($q){queryRDF:get($q)}
+  let $semantikQueryRDF := function($uri, $params){semantikQueryRDF:get($uri, $params)}
   
   let $getFileRDFparams := function($path, $xq, $schema, $params, $storeID){funct:getFileRDF($path, $xq, $schema, $params, $storeID)}
   
@@ -103,7 +108,7 @@ declare function funct:tpl( $app, $params ){
           $query, 
           map{ 'params':
             map:merge( 
-              ($params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF, '_getFileRDFparams' : $getFileRDFparams, '_queryRDF': $queryRDF} )
+              ($params, map{ '_tpl' : $tpl, '_config' : $config:param, '_getFile' : $getFile,'_getFileStore' : $getFileStore, '_getFileRDF' : $getFileRDF, '_getFileRDFparams' : $getFileRDFparams, '_queryRDF': $queryRDF, '_semantikQueryRDF':$semantikQueryRDF, '_getTokenPayload':$getTokenPayload})
             )
           }
         ),
