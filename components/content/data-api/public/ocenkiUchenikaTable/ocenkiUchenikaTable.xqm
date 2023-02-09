@@ -31,8 +31,9 @@ declare function ocenkiUchenikaTable:main($params){
        <td>
          {
            for $записьПоПредмету in $записиПоПредметуЗаПериод
+           for $i in ocenkiUchenikaTable:однаЗаписьЖурнала($записьПоПредмету)
            return
-             (ocenkiUchenikaTable:однаЗаписьЖурнала($записьПоПредмету), ', ')
+             ($i, ', ')
          }
          (пропусков: {count($пропуски)})
        </td>
@@ -52,10 +53,10 @@ declare
 function
 ocenkiUchenikaTable:среднийБаллОценокКонтрольные($записиЖурнала){
   let $всеОценки :=
-     for $записьЖурнала in $записиЖурнала
-     where matches($записьЖурнала/оценка/value/text(), 'к')
+     for $записьЖурнала in $записиЖурнала/tokenize(оценка/value/text(), ';')
+     where matches($записьЖурнала, 'к')
      let $оценка := 
-       substring(replace($записьЖурнала/оценка/value/text(), '\D', ''), 1, 1)
+       substring(replace($записьЖурнала, '\D', ''), 1, 1)
      where $оценка
      return
        xs:integer($оценка)
@@ -69,9 +70,8 @@ declare
 function
 ocenkiUchenikaTable:среднийБаллТекущихОценок($записиЖурнала){
   let $всеОценки :=
-     for $записьЖурнала in $записиЖурнала
-     let $оценка := 
-       substring(replace($записьЖурнала/оценка/value/text(), '\D', ''), 1, 1)
+     for $записьЖурнала in $записиЖурнала/tokenize(оценка/value/text(), ';')
+     let $оценка := substring(replace($записьЖурнала, '\D', ''), 1, 1)
      where $оценка
      return
        xs:integer($оценка)
@@ -85,9 +85,9 @@ function
 ocenkiUchenikaTable:однаЗаписьЖурнала($записьПоПредмету){
   let $date := 
      format-date(
-       xs:date($записьПоПредмету/дата/value/text()),'[D01].[M01].[Y0001]'
+       xs:date($записьПоПредмету/дата/value/text()), '[D01].[M01].[Y0001]'
      )
-  for $i in tokenize($записьПоПредмету/оценка/value/text(), ';')
+   for $i in tokenize($записьПоПредмету/оценка/value/text(), ';')
    let $буква := substring(replace($i, '\d', ''), 1, 1)  
    let $оценка := substring(replace($i, '\D', ''), 1, 1)
    let $печатьЗаписи :=
