@@ -53,13 +53,13 @@ function semantikQueryRDF:запросSPARQL(
   $праметры as map(*)
 ) as element(запрос){
   let $URIзапроса := xs:anyURI($идентификаторЗапроса)
-  return
-    fetch:xml(
-      web:create-url(
+  let $url :=
+    web:create-url(
         $semantikQueryRDF:semantikURL,
         map:merge((map{'_path':$URIзапроса}, $праметры))
       )
-    )/запрос
+  return
+    fetch:xml($url)/запрос
 };
 
 (: формирует строку GET-запроса к RDF-базе :)

@@ -26,10 +26,7 @@ function queryRDF:get($query, $output, $path){
     else(
       let $t := getToken:getAccessToken()
       return
-        (
-          session:set('access_token', $t),
-          $t
-        )
+        (session:set('access_token', $t), $t)
     )
     
   let $request := 
