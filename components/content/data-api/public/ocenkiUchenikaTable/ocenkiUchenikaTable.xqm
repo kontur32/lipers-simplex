@@ -83,15 +83,13 @@ declare
   %private
 function
 ocenkiUchenikaTable:однаЗаписьЖурнала($записьПоПредмету){
-   let $date := 
+  let $date := 
      format-date(
-       xs:date($записьПоПредмету/дата/value/text()),
-       '[D01].[M01].[Y0001]'
+       xs:date($записьПоПредмету/дата/value/text()),'[D01].[M01].[Y0001]'
      )
-   let $буква := 
-     substring(replace($записьПоПредмету/оценка/value/text(), '\d', ''), 1, 1)  
-   let $оценка :=
-     substring(replace($записьПоПредмету/оценка/value/text(), '\D', ''), 1, 1)
+  for $i in tokenize($записьПоПредмету/оценка/value/text(), ';')
+   let $буква := substring(replace($i, '\d', ''), 1, 1)  
+   let $оценка := substring(replace($i, '\D', ''), 1, 1)
    let $печатьЗаписи :=
      switch($буква)
      case 'к'
@@ -100,9 +98,7 @@ ocenkiUchenikaTable:однаЗаписьЖурнала($записьПоПред
      case 'д'
        return
          <font size="3" title="{$date} Дом.работа" color="red" face="Arial">{$оценка}</font>
-      default
-        return
-          <font title="{$date}">{$записьПоПредмету/оценка/value/text()}</font>
+      default return <font title="{$date}">{$i}</font>
    return
      $печатьЗаписи
 };
