@@ -27,17 +27,6 @@ declare function raspisanieTeachers:main($params){
 };
 
 declare function raspisanieTeachers:расписаниеRDF($params, $номерЛичногоДела){  
-  
-  let $расписание := 
-    fetch:xml(
-      web:create-url(
-        "http://a.roz37.ru:9984/garpix/semantik/app/request/execute",
-        map{
-          "rp": "http://a.roz37.ru/lipers/запросы/расписание-учителей",
-          "номерЛичногоДела":$номерЛичногоДела
-            } 
-        )
-     )
   let $расписание := 
     let $запрос := 'http://a.roz37.ru/lipers/запросы/расписание-учителей'
     let $параметрыЗапроса := map{"номерЛичногоДела":$номерЛичногоДела}

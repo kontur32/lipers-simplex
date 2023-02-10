@@ -1,14 +1,14 @@
 module namespace raspisanieTeachers = 'content/data-api/public/raspisanieTeachers';
 
 declare function raspisanieTeachers:main($params){
-  let $расписание := raspisanieTeachers:расписаниеRDF()
+  let $расписание := raspisanieTeachers:расписаниеRDF($params)
   return
     map{
       'данные' : <расписание>{ $расписание ?? $расписание !! 'Занятий нет'}</расписание>
     }
 };
 
-declare function raspisanieTeachers:расписаниеRDF(){
+declare function raspisanieTeachers:расписаниеRDF($params){
   let $номерЛичногоДела := request:parameter('номерЛичногоДела')
   let $деньНедели := request:parameter('деньНедели')
   let $расписание := 
@@ -22,6 +22,16 @@ declare function raspisanieTeachers:расписаниеRDF(){
         }
       )
     )/result/text()
+   
+   let $расписание :=
+     let $запрос := 'http://a.roz37.ru/lipers/запросы/расписание-учителя'
+     let $параметрыЗапроса :=
+       map{
+         "номерЛичногоДела":$номерЛичногоДела,
+         "деньНедели":$деньНедели
+       }
+     return
+       $params?_semantikQueryRDF($запрос, $параметрыЗапроса)/text()
    return
      $расписание
 };
