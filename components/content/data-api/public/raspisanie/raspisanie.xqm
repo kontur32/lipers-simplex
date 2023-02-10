@@ -9,16 +9,11 @@ declare function raspisanie:расписаниеRDF($params){
   then(
      let $нормализованныйКласс := lower-case(replace($params?класс, '\s', ''))
      let $деньНедели := xs:integer($params?деньНедели)
-     let $data := 
-       fetch:xml(
-        web:create-url(
-          "http://a.roz37.ru:9984/garpix/semantik/app/request/execute",
-          map{
-            "rp":"http://a.roz37.ru/lipers/запросы/расписание-классов",
-            "класс":$нормализованныйКласс
-          }
-        )
-      )//table[1]/tr[position()>1]/td[1+$деньНедели]
+     let $data :=  
+       $params?_tpl(
+         'content/data-api/public/raspisanieRDFNew',
+         map{'класс':$нормализованныйКласс}
+       )//table[1]/tr[position()>1]/td[1+$деньНедели]
      let $уроки := 
        for $i in $data
        count $c
