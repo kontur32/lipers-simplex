@@ -28,9 +28,10 @@ declare function raspisanieTeachers:main($params){
 
 declare function raspisanieTeachers:расписаниеRDF($params, $номерЛичногоДела){  
   let $расписание := 
-    let $запрос := 'http://a.roz37.ru/lipers/запросы/расписание-учителей'
+    let $адресЗапроса := 'http://a.roz37.ru/lipers/запросы/расписание-учителей'
     let $параметрыЗапроса := map{"номерЛичногоДела":$номерЛичногоДела}
-    return $params?_semantikQueryRDF($запрос, $параметрыЗапроса)//table
+    return
+      $params?_semantikQueryRDF($адресЗапроса, $параметрыЗапроса)//table
   return
      $расписание
 };
