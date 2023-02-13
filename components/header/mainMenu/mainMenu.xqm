@@ -10,6 +10,7 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Адреса и контакты', 'uchenik.adress' ],
             [ 'Возраст учащихся', 'uchenik.vozrast2' ],
             [ 'Дни рождения лицеистов', 'uchenik.list'],
+            [ 'Персональные данные', 'uchenik.personal'],
             [ 'Список учителей и предметов', 'uchenik.predmet'],
             [ 'Справки на печать', 'uchenik.docs-print']
         )
@@ -65,7 +66,7 @@ declare function mainMenu:main( $params as map(*) ){
             [ 'Журнал пропусков', 'ucheniki.propuski' ],
             [ 'Оценки за четверть', 'uchenik.konduit' ],
             [ 'Литкоины', 'uchenik.litkoinAll' ],
-            ['Расписание', 'uchenik.raspisanie']
+            [ 'Расписание', 'uchenik.raspisanie']
           )
         return
            [ $items3, 't', 'ОКО' ]
@@ -95,6 +96,22 @@ declare function mainMenu:main( $params as map(*) ){
     default
       return
         [ ( [ '', '' ] ), '', '' ]
+           
+    let $пункты5 :=
+    switch ( $params?area )
+    case 'teacher'
+      return
+       let $items5 := 
+          (            
+            [ 'Обновление данных', 'teachers.new' ],
+            [ 'Проверки', 'teachers.error']
+          )
+        return
+           [ $items5, 't', 'Admin' ]
+           
+    default
+      return
+        [ ( [ '', '' ] ), '', '' ]
     
   let $меню :=
     map{
@@ -103,10 +120,12 @@ declare function mainMenu:main( $params as map(*) ){
 	  'названиеРаздела2' : $пункты2?3,
     'названиеРаздела3' : $пункты3?3,
     'названиеРаздела4' : $пункты4?3,
+    'названиеРаздела5' : $пункты5?3,
     'пункты'  : mainMenu:items( $пункты?1, $пункты?2, $пункты?3 ),
 	  'пункты2' : mainMenu:items( $пункты2?1, $пункты2?2, $пункты2?3 ),
     'пункты3' : mainMenu:items( $пункты3?1, $пункты3?2, $пункты3?3 ),
-    'пункты4' : mainMenu:items( $пункты4?1, $пункты4?2, $пункты4?3 )
+    'пункты4' : mainMenu:items( $пункты4?1, $пункты4?2, $пункты4?3 ),
+    'пункты5' : mainMenu:items( $пункты5?1, $пункты5?2, $пункты5?3 )
     }
   return
      $меню
