@@ -148,8 +148,24 @@ declare function reports:main( $params ){
    case "uchenik.class22"
       return
         $params?_tpl( 'content/reports/uchenik.class22', map{} )
+     
+   case "uchenik.personal"
+      return
+        $params?_tpl( 'content/reports/uchenik.personal', map{} )
    
-   default
+    case "uchenik.raspisanieAll"
+      return
+        $params?_tpl( 'content/reports/uchenik.raspisanieAll', map{} )
+    
+    case "teachers.new"
+      return
+        $params?_tpl( 'content/reports/teachers.new', map{} )
+
+    case "teachers.error"
+      return
+        $params?_tpl( 'content/reports/teachers.error', map{} )
+        
+    default
       return
         $params?_tpl( 'content/reports/uchenik.propuski', map{} )
 

@@ -56,10 +56,9 @@ declare function uchenik.konduit:main2($data, $текущийКласс, $уче
      <table class = "table table-striped table-bordered">
        <tr>
          <th width="20%">Предмет</th>
-         <th width="10%">I четверть</th>
-         <th width="10%">II четверть</th>
-         <th width="10%">III четверть</th>
-         <th width="10%">IV четверть</th>
+         <th width="10%">I триместр</th>
+         <th width="10%">II триместр</th>
+         <th width="10%">III триместр</th>
          <th width="10%">Годовая оценка</th>
         </tr>
        {
@@ -67,7 +66,6 @@ declare function uchenik.konduit:main2($data, $текущийКласс, $уче
         return 
            <tr> 
              <td> { $p?1 } </td>
-             <td> { $p?2[ 1 ] } </td>
              <td> { $p?2[ 2 ] } </td>
              <td> { $p?2[ 3 ] } </td>
              <td> { $p?2[ 4 ] } </td>
