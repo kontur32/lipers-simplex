@@ -10,7 +10,7 @@ declare function uchenik.konduit:main($params){
   let $текущий := (request:parameter(xs:string('класс')))
   return
     map{
-       'оценкиЧетверть' : <div>{uchenik.konduit:main2($data, $текущий, $ученики)}</div>,
+       'оценкиЧетверть' : <div>{uchenik.konduit:триместры($data, $текущий, $ученики)}</div>,
        'классы' : for $i in (1 to 11) return <a href="{'?класс=' || $i}">{$i}</a>,
        'класс' : $текущий
     }
@@ -27,7 +27,7 @@ function
        $params?_config('store.yandex.personalData') (: идентификатор хранилища :)
     )/table/row[not(*:выбытиеОО/text())]
 };
-declare function uchenik.konduit:main2($data, $текущийКласс, $ученики ){   
+declare function uchenik.konduit:триместры($data, $текущийКласс, $ученики ){   
   for $ученик in $ученики
   let $номерЛичногоДелаУченика := 
     substring-after($ученик/@id/data(), 'реестрУчеников')  
@@ -42,14 +42,6 @@ declare function uchenik.konduit:main2($data, $текущийКласс, $уче
   let $оценкиПромежуточнойАттестации := 
     stud:промежуточнаяАттестацияУченика( $оценкиУченика, $номерЛичногоДелаУченика )
   
-  let $оценкиПоПредметам := 
-    stud:записиПоВсемПредметамЗаПериод(
-      $оценкиУченика,
-      $номерЛичногоДелаУченика,
-      xs:date('2021-09-01'),
-      xs:date(current-date())
-    )    
-    
   let $result :=   
    <div>   
      <h6>Оценки за текущий учебный год: {$фиоУченика}, {$номерКлассаУченика} класс</h6>
@@ -65,11 +57,11 @@ declare function uchenik.konduit:main2($data, $текущийКласс, $уче
         for $p in $оценкиПромежуточнойАттестации
         return 
            <tr> 
-             <td> { $p?1 } </td>
-             <td> { $p?2[ 2 ] } </td>
-             <td> { $p?2[ 3 ] } </td>
-             <td> { $p?2[ 4 ] } </td>
-             <td> { $p?2[ 5 ] } </td>
+             <td>{$p?1} </td>
+             <td>{$p?2[2]}</td>
+             <td>{$p?2[3]}</td>
+             <td>{$p?2[4]}</td>
+             <td>{$p?2[5]}</td>
            </tr>
         }
       </table>
