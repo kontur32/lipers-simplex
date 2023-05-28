@@ -96,7 +96,7 @@ declare function funct:tpl($app, $params){
     function($path, $xq, $storeID){funct:getFile($path, $xq, $storeID)}  
   let $getFileRDF :=
     function($path, $xq, $schema, $storeID)
-    {funct:getFileRDF( $path, $xq, $schema, $storeID)} 
+    {funct:getFileRDF($path, $xq, $schema, $storeID)} 
   let $getTokenPayload :=
     function(){getToken:getTokenPayload()}
   let $queryRDF :=

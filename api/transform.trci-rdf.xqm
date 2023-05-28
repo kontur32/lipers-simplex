@@ -14,14 +14,21 @@ declare
   %private
 function docs:upload($sourcePath as xs:string){
   let $hostStore := 'http://81.177.136.214:3030'
-  return
+  let $graph as element() := fetch:xml($sourcePath)/child::*
+  return    
     (
-      docs:deleteGraph($sourcePath, $hostStore || "/gs/update"),
-      docs:uploadGraph(
-        fetch:xml($sourcePath)/child::*, 
-          $sourcePath,
-          $hostStore || "/gs/upload"
-      ) 
+      try{
+        docs:deleteGraph($sourcePath, $hostStore || "/gs/update")
+      }
+      catch*{'не удалось удалить'},
+      try{
+          docs:uploadGraph(
+          $graph, 
+            $sourcePath,
+            $hostStore || "/gs/upload"
+        )
+      }
+      catch*{'не удалось загрузить'} 
     ) 
 };
 
